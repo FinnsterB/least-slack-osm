@@ -11,7 +11,7 @@
 #include <vector>
 #include <iostream>
 
-//Function to make jobshop from file
+//Function to make jobshop from file.
 JobShop makeJobShop(std::fstream& file){
   JobShop jobshop;
 
