@@ -10,46 +10,67 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 //Function to make jobshop from file.
-JobShop makeJobShop(std::fstream& file){
+JobShop makeJobShop(std::ifstream& file){
   JobShop jobshop;
 
   //Get amount of Jobs and Machines
   std::string token;
-  std::getline(file, token, ' ');
+  std::getline(file, token);
   unsigned long jobCount = std::stoi(token);
-  std::getline(file, token, ' ');
+  std::cout << "jobCount:" << jobCount << std::endl;
+  //std::getline(file, token, ' ');
   unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
+  std::cout << "machineCount:" << machineCount << std::endl;
 
   //Loop door
   for(unsigned long i = 0; i < jobCount; ++i){
       std::vector<Task> tasks;
-      for(unsigned long j = 0; j < machineCount; ++j){
-	  std::getline(file, token, ' ');
-	  unsigned long machineNr = std::stoi(token);
-	  std::getline(file, token, ' ');
-	  unsigned long duration = std::stoi(token);
-	  tasks.push_back(Task(machineNr, duration, j));
-      }
-      Job job(tasks);
-      jobshop.jobs.push_back(job);
+      std::getline(file, token);
+      std::cout << token << std::endl;
+      std::vector<std::string> v;
+
+      std::stringstream ss(token);
+
+      std::string word;
+      int task = 999;
+      int duration = 999;
+	  while (ss >> word) { // Extract word from the stream.
+		  if(task == 999) {
+			  task = std::stoi(word);
+		  }
+		  else {
+			  duration = std::stoi(word);
+			  std::cout << "job " << i << " task: " << task << " duration: " << duration << std::endl;
+			  task = 999;
+			  duration = 999;
+		  }
+	  }
+	  std::cout << std::endl;
   }
+
 
   return jobshop;
 }
 
 int main(int argc, char **argv) {
   if(argc < 2){
-        std::cout << "No path provided" << '\n';
-    }
+	std::cout << "No path provided" << '\n';
+  }
 
   std::ifstream file;
-  file.open(argv[argc-1]);//TODO:anders
-
-  if(!file){
-      std::cout << "No file provided" << '\n';
+  argv[argc-1] = "input.txt";
+  file.open(argv[argc-1]);
+  if(file.is_open()){
+     std::cout << " file provided" << '\n';
+     JobShop x = makeJobShop(file);
+  } else{
+	  std::cout << "No file provided" << '\n';
   }
+
+
 
   return 0;
 }

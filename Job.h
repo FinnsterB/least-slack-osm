@@ -18,8 +18,9 @@ public:
   Job (std::vector<Task> a_Tasks);
   virtual
   ~Job ();
-private:
   std::vector<Task> tasks;
+
+private:
 };
 
 #endif /* JOB_H_ */

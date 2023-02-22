@@ -19,6 +19,11 @@ Task::Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }
 
+unsigned long Task::getDuration(){
+	return this->duration;
+}
+
+
 Task::~Task ()
 {
   // TODO Auto-generated destructor stub
