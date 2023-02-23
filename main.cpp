@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
   }
 
   std::ifstream file;
-  argv[argc-1] = "input.txt";
+//  argv[argc-1] = "input.txt";
   file.open(argv[argc-1]);
   if(file.is_open()){
      std::cout << " file provided" << '\n';
