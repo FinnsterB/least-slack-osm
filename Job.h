@@ -16,6 +16,7 @@ class Job
 public:
   Job ();
   Job (std::vector<Task> a_Tasks);
+  unsigned long getDuration();
   virtual
   ~Job ();
   std::vector<Task> tasks;

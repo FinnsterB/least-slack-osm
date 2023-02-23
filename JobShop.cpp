@@ -14,6 +14,16 @@ JobShop::JobShop ()
 
 }
 
+Job* JobShop::getLongestJob() {
+	Job* longestJob = &jobs.at(0);
+	for(Job& x : jobs) {
+		if(x.getDuration() > longestJob->getDuration()) {
+			longestJob = &x;
+		}
+	}
+	return longestJob;
+}
+
 JobShop::~JobShop ()
 {
   // TODO Auto-generated destructor stub
