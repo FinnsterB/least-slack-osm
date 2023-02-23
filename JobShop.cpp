@@ -11,7 +11,6 @@ JobShop::JobShop ()
 {
   // TODO Auto-generated constructor stub
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
-
 }
 
 Job* JobShop::getLongestJob() {

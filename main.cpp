@@ -76,13 +76,10 @@ int main(int argc, char **argv) {
 
      //check if jobshop is build properly
      for(Job& j : x.jobs)  {
-    	 std::cout << "Task 1 duration: " << j.tasks.at(0).getDuration() << std::endl;
-    	 std::cout << "Task 2 duration: " << j.tasks.at(1).getDuration()<< std::endl;
-    	 std::cout << "Task 3 duration: " << j.tasks.at(2).getDuration()<< std::endl;
+    	 for(Task& t : j.tasks) {
+        	 std::cout << "Task " << t.getId() << " duration: " << j.tasks.at(0).getDuration() << std::endl;
+    	 }
      }
-
-
-
      //algorithm
      //1) find longest task (i guess longest job?)
 

@@ -14,6 +14,7 @@ class Task
 public:
   Task ();
   Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id) ;
+  unsigned long getId();
   unsigned long getDuration();
 
   virtual

@@ -20,7 +20,7 @@ Job::Job (std::vector<Task> a_Tasks): tasks(a_Tasks)
 }
 
 unsigned long Job::getDuration() {
-	unsigned long duration;
+	unsigned long duration = 0;
 	for(Task x : tasks) {
 		duration += x.getDuration();
 	}
