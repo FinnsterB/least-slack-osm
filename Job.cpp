@@ -32,3 +32,10 @@ Job::~Job ()
   // TODO Auto-generated destructor stub
 }
 
+unsigned long Job::calcSlack(Job* longest_job) {
+	this->slack = longest_job->getDuration() - this->getDuration();
+
+	std::cout << "slack: " << this->slack << std::endl;
+
+	return this->slack;
+}

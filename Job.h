@@ -16,11 +16,12 @@ class Job
 public:
   Job ();
   Job (std::vector<Task> a_Tasks);
+  unsigned long calcSlack(Job* longest_job);
   unsigned long getDuration();
   virtual
   ~Job ();
   std::vector<Task> tasks;
-
+  unsigned long slack;
 private:
 };
 

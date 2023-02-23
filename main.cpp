@@ -84,7 +84,12 @@ int main(int argc, char **argv) {
      //1) find longest task (i guess longest job?)
 
      Job* longest_job = x.getLongestJob();
-     std::cout << "Duration of longest job: " << longest_job->getDuration();
+     std::cout << "Duration of longest job: " << longest_job->getDuration() << std::endl;
+
+     // 2) slack bepalen
+     for(Job j : x.jobs) {
+    	 j.calcSlack(longest_job);
+     }
 
 
   } else{
