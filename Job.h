@@ -22,6 +22,8 @@ public:
   ~Job ();
   std::vector<Task> tasks;
   unsigned long slack;
+
+  bool operator<(Job &j);
 private:
 };
 

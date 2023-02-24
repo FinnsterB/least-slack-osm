@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 //Function to make jobshop from file.
 JobShop makeJobShop(std::ifstream& file, std::vector<Machine>& machines){
@@ -101,9 +102,21 @@ int main(int argc, char **argv) {
      std::cout << "Duration of longest job: " << longest_job->getDuration() << std::endl;
 
      // 2) slack bepalen
-     for(Job j : x.jobs) {
+     for(Job& j : x.jobs) {
     	 j.calcSlack(longest_job);
      }
+
+     for(Job j : x.jobs) {
+    	 std::cout << "SLACK CACLULATED: " << j.slack << std::endl;
+	 }
+     //sorteer Jobs op slack
+     std::sort(x.jobs.begin(), x.jobs.end());
+     for(Job j : x.jobs) {
+		 std::cout << "SORTED SLACK CACLULATED: " << j.slack << std::endl;
+	 }
+     // 3) loopen over taken in volgorde van slack, als taak is schedulebaar (taak is niet bezig) en machine is vrij, schedulen.
+   //  for()
+
 
 
 

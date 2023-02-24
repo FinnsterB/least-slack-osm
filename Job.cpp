@@ -39,3 +39,10 @@ unsigned long Job::calcSlack(Job* longest_job) {
 
 	return this->slack;
 }
+
+bool Job::operator<(Job &j) {
+	if(this->slack < j.slack) {
+		return true;
+	}
+	return false;
+}
