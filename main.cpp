@@ -7,13 +7,14 @@
 #include "JobShop.h"
 #include "Task.h"
 #include "Job.h"
+#include "Machine.h"
 #include <fstream>
 #include <vector>
 #include <iostream>
 #include <sstream>
 
 //Function to make jobshop from file.
-JobShop makeJobShop(std::ifstream& file){
+JobShop makeJobShop(std::ifstream& file, std::vector<Machine>& machines){
   JobShop jobshop;
 
   //Get amount of Jobs and Machines
@@ -24,6 +25,13 @@ JobShop makeJobShop(std::ifstream& file){
   //std::getline(file, token, ' ');
   unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
   std::cout << "machineCount:" << machineCount << std::endl;
+
+
+  //create machines
+  for(unsigned long i = 0; i < machineCount; ++i) {
+	  Machine m(i);
+	  machines.push_back(m);
+  }
 
   //Loop door
   int TaskId = 0;
@@ -68,11 +76,13 @@ int main(int argc, char **argv) {
 	std::cout << "No path provided" << '\n';
   }
 
+  std::vector<Machine> machines;
+
   std::ifstream file;
   file.open(argv[argc-1]);
   if(file.is_open()){
      std::cout << " file provided" << '\n';
-     JobShop x = makeJobShop(file);
+     JobShop x = makeJobShop(file, machines);
 
      //check if jobshop is build properly
      for(Job& j : x.jobs)  {
@@ -80,6 +90,10 @@ int main(int argc, char **argv) {
         	 std::cout << "Task " << t.getId() << " duration: " << j.tasks.at(0).getDuration() << std::endl;
     	 }
      }
+     for(Machine& m : machines) {
+    	 std::cout << "Machine build with ID: " << m.id << std::endl;
+     }
+
      //algorithm
      //1) find longest task (i guess longest job?)
 
@@ -90,6 +104,8 @@ int main(int argc, char **argv) {
      for(Job j : x.jobs) {
     	 j.calcSlack(longest_job);
      }
+
+
 
 
   } else{
