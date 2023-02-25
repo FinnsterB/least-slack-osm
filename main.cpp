@@ -133,9 +133,15 @@ int main(int argc, char **argv) {
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
+
 							if(j.startTime == -1) {
 								j.setStartTime(timeT);
 								std::cout << "setStartTime of Job x to " << j.startTime << std::endl;
+							}
+							if(j.stopTime == -1) {
+								j.stopTime = j.startTime + currentTask.getDuration();
+							} else {
+								j.stopTime = j.stopTime + currentTask.getDuration();
 							}
 						}
 					}
@@ -171,14 +177,14 @@ int main(int argc, char **argv) {
 			std::cout << "MOVED " << shortestTaskDuration
 					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
 
-			for (Job &j : x.jobs) { //check if job is ready and set endtime
-				if(j.isDone()) {
-					j.setStopTime(timeT);
-					std::cout << "stoptime set on " << timeT << std::endl;
-				}
-			}
+//			for (Job &j : x.jobs) { //check if job is ready and set endtime
+//				if(j.isDone()) {
+//					j.setStopTime(timeT);
+//					std::cout << "stoptime set on " << timeT << std::endl;
+//				}
+//			}
 
-			timeT = timeT + shortestTaskDuration;
+			timeT += shortestTaskDuration;
 		}
 
 		std::cout << "----------OUTPUT-------------" << std::endl;

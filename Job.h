@@ -24,7 +24,7 @@ public:
   unsigned long slack;
   unsigned long taskIterator;
   unsigned long startTime = -1;
-  unsigned long stopTime;
+  unsigned long stopTime = -1;
 
   void setStartTime(unsigned long time) {
 	  this->startTime = time;

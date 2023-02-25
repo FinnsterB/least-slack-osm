@@ -10,6 +10,8 @@
 Job::Job ():taskIterator(0)
 {
   // TODO Auto-generated constructor stub
+	startTime = -1;
+	stopTime = -1;
 
 }
 
