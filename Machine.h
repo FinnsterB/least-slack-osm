@@ -11,7 +11,7 @@
 class Machine
 {
 public:
-	int id;
+	unsigned long id;
 	unsigned long timeBusy;
 	Machine(unsigned long id);
 	virtual ~Machine();

@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
 					});
 			//Update de slack van elke Job.
 			std::for_each(x.jobs.begin(), x.jobs.end(),
-					[shortestTaskDuration](Job &job) { //TODO: Ik denk dat dit problemen op gaat leveren. Iets Iets Iterator invalidation.
+					[shortestTaskDuration](Job &job) {
 						if (job.slack >= shortestTaskDuration) {
 							job.slack -= shortestTaskDuration;
 						}
