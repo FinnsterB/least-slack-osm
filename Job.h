@@ -14,8 +14,8 @@
 class Job
 {
 public:
-  Job ();
-  Job (std::vector<Task> a_Tasks);
+  Job (int id);
+  Job (std::vector<Task> a_Tasks, int id);
   unsigned long calcSlack(Job* longest_job);
   unsigned long getDuration();
   virtual
@@ -25,6 +25,7 @@ public:
   unsigned long taskIterator;
   unsigned long startTime = -1;
   unsigned long stopTime = -1;
+  int id;
 
   void setStartTime(unsigned long time) {
 	  this->startTime = time;

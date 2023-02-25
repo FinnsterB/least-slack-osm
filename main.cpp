@@ -45,7 +45,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 
 		std::string word;
 
-		Job xjob = Job();
+		Job xjob = Job(i);
 
 		int machine = 999;
 		int duration = 999;
@@ -187,9 +187,16 @@ int main(int argc, char **argv) {
 			timeT += shortestTaskDuration;
 		}
 
+		//sort on job id
+		sort(x.jobs.begin(), x.jobs.end(),
+		    [](const Job & a, const Job & b) -> bool
+		{
+		    return a.id < b.id;
+		});
+
 		std::cout << "----------OUTPUT-------------" << std::endl;
 		for(Job &j : x.jobs) {
-			std::cout << j.startTime << " " << j.stopTime << std::endl;
+			std::cout << j.id << " " << j.startTime << " " << j.stopTime << std::endl;
 		}
 
 	} else {

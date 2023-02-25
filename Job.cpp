@@ -7,7 +7,7 @@
 
 #include "Job.h"
 
-Job::Job ():taskIterator(0)
+Job::Job (int id):taskIterator(0),id(id)
 {
   // TODO Auto-generated constructor stub
 	startTime = -1;
@@ -15,10 +15,9 @@ Job::Job ():taskIterator(0)
 
 }
 
-Job::Job (std::vector<Task> a_Tasks): tasks(a_Tasks), taskIterator(0)
+Job::Job (std::vector<Task> a_Tasks,int id): tasks(a_Tasks), taskIterator(0), id(id)
 {
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
-
 }
 
 unsigned long Job::getDuration() {
