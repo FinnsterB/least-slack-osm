@@ -35,13 +35,17 @@ public:
   }
 
   bool isDone(){
-	  std::cout << "is task done?" << this->taskIterator << " " << this->tasks.size() << std::endl;
-	if (this->taskIterator >= this->tasks.size() - 1) {
-		  std::cout << "yes" << std::endl;
+//	  std::cout << "is task done?" << this->taskIterator << " " << this->tasks.size() << std::endl;
+//	if (this->taskIterator >= this->tasks.size() - 1) {
+//		  std::cout << "yes" << std::endl;
+//
+//		return true;
+//	}
+//	  std::cout << "no" << std::endl;
+	  if(this->taskIterator + 1 >= this->tasks.size()) {
+		  return true;
+	  }
 
-		return true;
-	}
-	  std::cout << "no" << std::endl;
 
 	return false;
   }

@@ -128,8 +128,8 @@ int main(int argc, char **argv) {
 					if (currentTask.isSchedulable()) {
 						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(currentTask.getDuration());
-							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
-							++j.taskIterator;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
+							//currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
+							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
@@ -138,11 +138,12 @@ int main(int argc, char **argv) {
 								j.setStartTime(timeT);
 								std::cout << "setStartTime of Job x to " << j.startTime << std::endl;
 							}
-							if(j.stopTime == -1) {
-								j.stopTime = j.startTime + currentTask.getDuration();
-							} else {
-								j.stopTime = j.stopTime + currentTask.getDuration();
-							}
+//							if(j.stopTime == -1) {
+//								j.stopTime = j.startTime + currentTask.getDuration();
+//							} else {
+//								j.stopTime = j.stopTime + currentTask.getDuration();
+//							}
+							j.setStopTime(j.getDuration());
 						}
 					}
 				}
@@ -176,14 +177,6 @@ int main(int argc, char **argv) {
 
 			std::cout << "MOVED " << shortestTaskDuration
 					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
-
-//			for (Job &j : x.jobs) { //check if job is ready and set endtime
-//				if(j.isDone()) {
-//					j.setStopTime(timeT);
-//					std::cout << "stoptime set on " << timeT << std::endl;
-//				}
-//			}
-
 			timeT += shortestTaskDuration;
 		}
 
@@ -196,7 +189,7 @@ int main(int argc, char **argv) {
 
 		std::cout << "----------OUTPUT-------------" << std::endl;
 		for(Job &j : x.jobs) {
-			std::cout << j.id << " " << j.startTime << " " << j.stopTime << std::endl;
+			std::cout << j.id << " " << j.startTime << " " << (j.stopTime+j.startTime) << std::endl;
 		}
 
 	} else {
