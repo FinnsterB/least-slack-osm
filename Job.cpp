@@ -7,13 +7,13 @@
 
 #include "Job.h"
 
-Job::Job ()
+Job::Job ():taskIterator(0)
 {
   // TODO Auto-generated constructor stub
 
 }
 
-Job::Job (std::vector<Task> a_Tasks): tasks(a_Tasks)
+Job::Job (std::vector<Task> a_Tasks): tasks(a_Tasks), taskIterator(0)
 {
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
 

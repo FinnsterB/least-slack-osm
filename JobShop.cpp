@@ -28,3 +28,11 @@ JobShop::~JobShop ()
   // TODO Auto-generated destructor stub
 }
 
+bool JobShop::everyTaskPlanned() {
+	for(Job& j: jobs){
+		if(j.taskIterator < j.tasks.size()){
+			return false;
+		}
+	}
+	return true;
+}

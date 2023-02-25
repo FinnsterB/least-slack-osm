@@ -12,8 +12,14 @@ class Machine
 {
 public:
 	int id;
+	unsigned long timeBusy;
 	Machine(unsigned long id);
 	virtual ~Machine();
+	bool operator<(const Machine& rhs);
+	unsigned long
+	getTimeBusy() const;
+	void
+	setTimeBusy(unsigned long timeBusy);
 };
 
 #endif /* MACHINE_H_ */

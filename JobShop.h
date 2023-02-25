@@ -16,6 +16,7 @@ public:
   std::vector<Job> jobs;
   JobShop ();
   Job* getLongestJob();
+  bool everyTaskPlanned();
   virtual
   ~JobShop ();
 };

@@ -22,6 +22,7 @@ public:
   ~Job ();
   std::vector<Task> tasks;
   unsigned long slack;
+  unsigned long taskIterator;
 
   bool operator<(Job &j);
 private:
