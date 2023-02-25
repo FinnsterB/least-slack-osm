@@ -23,6 +23,27 @@ public:
   std::vector<Task> tasks;
   unsigned long slack;
   unsigned long taskIterator;
+  unsigned long startTime = -1;
+  unsigned long stopTime;
+
+  void setStartTime(unsigned long time) {
+	  this->startTime = time;
+  }
+  void setStopTime(unsigned long time) {
+  	  this->stopTime = time;
+  }
+
+  bool isDone(){
+	  std::cout << "is task done?" << this->taskIterator << " " << this->tasks.size() << std::endl;
+	if (this->taskIterator >= this->tasks.size() - 1) {
+		  std::cout << "yes" << std::endl;
+
+		return true;
+	}
+	  std::cout << "no" << std::endl;
+
+	return false;
+  }
 
   bool operator<(Job &j);
 private:

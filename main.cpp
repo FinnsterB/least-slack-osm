@@ -22,10 +22,10 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::string token;
 	std::getline(file, token);
 	unsigned long jobCount = std::stoi(token);
-	std::cout << "jobCount:" << jobCount << std::endl;
+	//std::cout << "jobCount:" << jobCount << std::endl;
 	//std::getline(file, token, ' ');
 	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
-	std::cout << "machineCount:" << machineCount << std::endl;
+//	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
 	for (unsigned long i = 0; i < machineCount; ++i) {
@@ -38,7 +38,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	for (unsigned long i = 0; i < jobCount; ++i) {
 		std::vector<Task> tasks;
 		std::getline(file, token);
-		std::cout << token << std::endl;
+		//std::cout << token << std::endl;
 		std::vector<std::string> v;
 
 		std::stringstream ss(token);
@@ -54,8 +54,8 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 				machine = std::stoi(word);
 			} else {
 				duration = std::stoi(word);
-				std::cout << "job " << i << " machine: " << machine
-						<< " duration: " << duration << std::endl;
+//				std::cout << "job " << i << " machine: " << machine
+//						<< " duration: " << duration << std::endl;
 				Task xTask = Task(machine, duration, TaskId);
 				TaskId++;
 				xjob.tasks.push_back(xTask);
@@ -64,7 +64,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 			}
 		}
 		jobshop.jobs.push_back(xjob);
-		std::cout << std::endl;
 	}
 
 	return jobshop;
@@ -84,15 +83,15 @@ int main(int argc, char **argv) {
 		JobShop x = makeJobShop(file, machines);
 
 		//check if jobshop is build properly
-		for (Job &j : x.jobs) {
-			for (Task &t : j.tasks) {
-				std::cout << "Task " << t.getId() << " duration: "
-						<< t.getDuration() << std::endl;
-			}
-		}
-		for (Machine &m : machines) {
-			std::cout << "Machine build with ID: " << m.id << std::endl;
-		}
+//		for (Job &j : x.jobs) {
+//			for (Task &t : j.tasks) {
+//				std::cout << "Task " << t.getId() << " duration: "
+//						<< t.getDuration() << std::endl;
+//			}
+//		}
+//		for (Machine &m : machines) {
+//			std::cout << "Machine build with ID: " << m.id << std::endl;
+//		}
 
 		//algorithm
 		//1) find longest task (i guess longest job?)
@@ -116,10 +115,10 @@ int main(int argc, char **argv) {
 		}
 		// 3) loopen over taken in volgorde van slack, als taak is schedulebaar (taak is niet bezig) en machine is vrij, schedulen.
 		//  for()
-
+		int timeT = 0;
 		while (!x.everyTaskPlanned()) {
 			for (Job &j : x.jobs) {
-				if (j.taskIterator < j.tasks.size()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
+				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
 
 					Task &currentTask = j.tasks.at(j.taskIterator); //Een reference naar de taak die we willen inplannen.
 					Machine &currentMachine = machines.at(
@@ -128,23 +127,24 @@ int main(int argc, char **argv) {
 
 					if (currentTask.isSchedulable()) {
 						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
-							currentMachine.setTimeBusy(
-									currentTask.getDuration());
+							currentMachine.setTimeBusy(currentTask.getDuration());
 							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
 							++j.taskIterator;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
+							if(j.startTime == -1) {
+								j.setStartTime(timeT);
+								std::cout << "setStartTime of Job x to " << j.startTime << std::endl;
+							}
 						}
 					}
 				}
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
-			unsigned long shortestTaskDuration = 0; //Houdt bij hoelang de kortste ingeplande taak duurt.
+			unsigned long shortestTaskDuration = machines.at(0).getTimeBusy(); //Houdt bij hoelang de kortste ingeplande taak duurt.
 			for (Machine m : machines) {
-				if (shortestTaskDuration == 0) {
-					shortestTaskDuration = m.getTimeBusy();
-				} else if ((shortestTaskDuration > m.getTimeBusy())
+				if ((shortestTaskDuration > m.getTimeBusy())
 						&& (m.getTimeBusy() != 0)) {
 					shortestTaskDuration = m.getTimeBusy();
 				}
@@ -170,6 +170,20 @@ int main(int argc, char **argv) {
 
 			std::cout << "MOVED " << shortestTaskDuration
 					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
+
+			for (Job &j : x.jobs) { //check if job is ready and set endtime
+				if(j.isDone()) {
+					j.setStopTime(timeT);
+					std::cout << "stoptime set on " << timeT << std::endl;
+				}
+			}
+
+			timeT = timeT + shortestTaskDuration;
+		}
+
+		std::cout << "----------OUTPUT-------------" << std::endl;
+		for(Job &j : x.jobs) {
+			std::cout << j.startTime << " " << j.stopTime << std::endl;
 		}
 
 	} else {
