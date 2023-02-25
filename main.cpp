@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 		for (Job &j : x.jobs) {
 			for (Task &t : j.tasks) {
 				std::cout << "Task " << t.getId() << " duration: "
-						<< j.tasks.at(0).getDuration() << std::endl; //TODO: Deze print alleen de duration van de eerste Task per Job
+						<< t.getDuration() << std::endl;
 			}
 		}
 		for (Machine &m : machines) {
