@@ -22,10 +22,10 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::string token;
 	std::getline(file, token);
 	unsigned long jobCount = std::stoi(token);
-	//std::cout << "jobCount:" << jobCount << std::endl;
+	std::cout << "jobCount:" << jobCount << std::endl;
 	//std::getline(file, token, ' ');
 	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
-//	std::cout << "machineCount:" << machineCount << std::endl;
+	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
 	for (unsigned long i = 0; i < machineCount; ++i) {
@@ -121,11 +121,19 @@ int main(int argc, char **argv) {
 				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
 
 					Task &currentTask = j.tasks.at(j.taskIterator); //Een reference naar de taak die we willen inplannen.
+					if(currentTask.getDuration() == 0) {
+											j.taskIterator++;
+											if(!j.startTimeIsSet()) {
+												j.setStartTime(timeT);
+											}
+										}
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 
 
 					if (currentTask.isSchedulable()) {
+						std::cout << "SCHEDULABLE" << std::endl;
+
 						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(currentTask.getDuration());
 							//currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
@@ -136,11 +144,16 @@ int main(int argc, char **argv) {
 
 							if(!j.startTimeIsSet()) {
 								j.setStartTime(timeT);
-								std::cout << "setStartTime of Job x to " << j.startTime << std::endl;
+								std::cout << "setStartTime of Job " << j.id << " to " << j.startTime << std::endl;
 							}
 							j.setStopTime(j.getDuration());
 						}
+						else if(currentTask.getDuration() == 0) {
+							j.taskIterator += 1;
+						}
 					}
+
+
 				}
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
@@ -170,9 +183,14 @@ int main(int argc, char **argv) {
 			//Sorteer opnieuw de Jobs op slack.
 			std::sort(x.jobs.begin(), x.jobs.end()); //Gebruikt operator<() die op slack controleert.
 
+			//shortest task duratoin is 0?
+//			if(shortestTaskDuration == 0) {
+//				shortestTaskDuration = 100;
+//			}
 			std::cout << "MOVED " << shortestTaskDuration
 					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
 			timeT += shortestTaskDuration;
+
 		}
 
 		//sort on job id
@@ -184,7 +202,7 @@ int main(int argc, char **argv) {
 
 		std::cout << "----------OUTPUT-------------" << std::endl;
 		for(Job &j : x.jobs) {
-			std::cout << j.id << " " << j.startTime << " " << (j.stopTime+j.startTime) << std::endl;
+			std::cout << j.id << " " << j.startTime << " " << (j.getDuration()+j.startTime) << std::endl;
 		}
 
 	} else {
