@@ -9,9 +9,6 @@
 
 Job::Job (int id):taskIterator(0),id(id)
 {
-  // TODO Auto-generated constructor stub
-	startTime = -1;
-	stopTime = -1;
 
 }
 

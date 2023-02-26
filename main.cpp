@@ -134,15 +134,10 @@ int main(int argc, char **argv) {
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
 
-							if(j.startTime == -1) {
+							if(!j.startTimeIsSet()) {
 								j.setStartTime(timeT);
 								std::cout << "setStartTime of Job x to " << j.startTime << std::endl;
 							}
-//							if(j.stopTime == -1) {
-//								j.stopTime = j.startTime + currentTask.getDuration();
-//							} else {
-//								j.stopTime = j.stopTime + currentTask.getDuration();
-//							}
 							j.setStopTime(j.getDuration());
 						}
 					}
