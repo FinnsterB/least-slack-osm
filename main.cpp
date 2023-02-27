@@ -28,6 +28,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
+	machineCount = 5;
 	for (unsigned long i = 0; i < machineCount; ++i) {
 		Machine m(i);
 		machines.push_back(m);
@@ -65,7 +66,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		}
 		jobshop.jobs.push_back(xjob);
 	}
-
 	return jobshop;
 }
 
@@ -82,13 +82,13 @@ int main(int argc, char **argv) {
 		std::cout << " file provided" << '\n';
 		JobShop x = makeJobShop(file, machines);
 
-		//check if jobshop is build properly
-//		for (Job &j : x.jobs) {
-//			for (Task &t : j.tasks) {
-//				std::cout << "Task " << t.getId() << " duration: "
-//						<< t.getDuration() << std::endl;
-//			}
-//		}
+//	`	check if jobshop is build properly
+		for (Job &j : x.jobs) {
+			for (Task &t : j.tasks) {
+				std::cout << "Task " << t.getId() << " duration: "
+						<< t.getDuration() << std::endl;
+			}
+		}
 //		for (Machine &m : machines) {
 //			std::cout << "Machine build with ID: " << m.id << std::endl;
 //		}
@@ -134,10 +134,10 @@ int main(int argc, char **argv) {
 					if (currentTask.isSchedulable()) {
 						std::cout << "SCHEDULABLE" << std::endl;
 
-						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
+						if (currentMachine.getTimeBusy() == 0 && currentTask.getDuration()!= 0) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(currentTask.getDuration());
-							//currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
-							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
+							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
+							//j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
@@ -148,9 +148,10 @@ int main(int argc, char **argv) {
 							}
 							j.setStopTime(j.getDuration());
 						}
-						else if(currentTask.getDuration() == 0) {
+						//else if(currentTask.getDuration() == 0) {
+							currentTask.setIfSchedulable(false);
 							j.taskIterator += 1;
-						}
+						//}
 					}
 
 
