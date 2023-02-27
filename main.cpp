@@ -28,7 +28,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
-	machineCount = 5;
+	//machineCount = 5;
 	for (unsigned long i = 0; i < machineCount; ++i) {
 		Machine m(i);
 		machines.push_back(m);
@@ -127,17 +127,23 @@ int main(int argc, char **argv) {
 												j.setStartTime(timeT);
 											}
 										}
+
+					//hier gaat iets fout qua index?
+					std::cout << "looking for machine " << currentTask.getMachineNr() <<std::endl;
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 
 
 					if (currentTask.isSchedulable()) {
 						std::cout << "SCHEDULABLE" << std::endl;
-
-						if (currentMachine.getTimeBusy() == 0 && currentTask.getDuration()!= 0) {//Kijk of de machine vrij is.
+						//if duration is 0 skip picking task and just ignore task.
+						if(currentTask.getDuration() == 0 && currentMachine.getTimeBusy() != 0) {
+							j.taskIterator += 1;
+						}
+						else if (currentMachine.getTimeBusy() == 0 && currentTask.getDuration() != 0) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(currentTask.getDuration());
 							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
-							//j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
+							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
@@ -148,13 +154,7 @@ int main(int argc, char **argv) {
 							}
 							j.setStopTime(j.getDuration());
 						}
-						//else if(currentTask.getDuration() == 0) {
-							currentTask.setIfSchedulable(false);
-							j.taskIterator += 1;
-						//}
 					}
-
-
 				}
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
