@@ -97,22 +97,22 @@ int main(int argc, char **argv) {
 		//1) find longest task (i guess longest job?)
 
 		Job *longest_job = x.getLongestJob();
-		std::cout << "Duration of longest job: " << longest_job->getDuration()
-				<< std::endl;
+//		std::cout << "Duration of longest job: " << longest_job->getDuration()
+//				<< std::endl;
 
 		// 2) slack bepalen
 		for (Job &j : x.jobs) {
 			j.calcSlack(longest_job);
 		}
 
-		for (Job j : x.jobs) {
-			std::cout << "SLACK CALCULATED: " << j.slack << std::endl;
-		}
+//		for (Job j : x.jobs) {
+//			std::cout << "SLACK CALCULATED: " << j.slack << std::endl;
+//		}
 		//sorteer Jobs op slack
 		std::sort(x.jobs.begin(), x.jobs.end());//Gebruikt operator<() die op slack controleert.
-		for (Job j : x.jobs) {
-			std::cout << "SORTED SLACK CALCULATED: " << j.slack << std::endl;
-		}
+//		for (Job j : x.jobs) {
+//			std::cout << "SORTED SLACK CALCULATED: " << j.slack << std::endl;
+//		}
 		// 3) loopen over taken in volgorde van slack, als taak is schedulebaar (taak is niet bezig) en machine is vrij, schedulen.
 		//  for()
 		int timeT = 0;
@@ -127,23 +127,15 @@ int main(int argc, char **argv) {
 												j.setStartTime(timeT);
 											}
 										}
-
-					std::cout << "CurrentTask Duration " << currentTask.getDuration() <<std::endl;
-					std::cout << "CurrentJob Slack " << j.slack << std::endl;
-					std::cout << "looking for machine " << currentTask.getMachineNr() <<std::endl;
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
-					std::cout << "MACHINE BUSY: " << currentMachine.timeBusy;
 					if (currentTask.isSchedulable()) {
-						std::cout << "SCHEDULABLE" << std::endl;
 						//if duration is 0 skip picking task and just ignore task.
 						if(currentTask.getDuration() == 0 && currentMachine.getTimeBusy() != 0) {
-							std::cout << "Duration is 0 so skip" << std::endl;
 							currentTask.setIfSchedulable(false);
 							j.taskIterator += 1;
 						}
 						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
-std::cout << "Tijd om in te plannen, Tijd om in te plannen, Tijd om in te plannen " << std::endl;
 							currentMachine.setTimeBusy(currentTask.getDuration());
 							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
 							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
@@ -153,7 +145,6 @@ std::cout << "Tijd om in te plannen, Tijd om in te plannen, Tijd om in te planne
 
 							if(!j.startTimeIsSet()) {
 								j.setStartTime(timeT);
-								std::cout << "setStartTime of Job " << j.id << " to " << j.startTime << std::endl;
 							}
 							j.setStopTime(j.getDuration());
 						}
@@ -171,7 +162,6 @@ std::cout << "Tijd om in te plannen, Tijd om in te plannen, Tijd om in te planne
 					shortestTaskDuration = m.getTimeBusy();
 				}
 			}
-			std::cout << shortestTaskDuration << " IS SHORTEDTASKDURATION" << std::endl; //die is 0, dat mag niet!
 
 			//Update de tijd die de machines nog bezig zijn met de tijd van de machine die het kortst bezig is.
 			std::for_each(machines.begin(), machines.end(),
