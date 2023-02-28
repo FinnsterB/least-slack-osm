@@ -20,10 +20,10 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 
 	//Get amount of Jobs and Machines
 	std::string token;
-	std::getline(file, token);
+	std::getline(file, token, ' ');
 	unsigned long jobCount = std::stoi(token);
 	std::cout << "jobCount:" << jobCount << std::endl;
-	//std::getline(file, token, ' ');
+	std::getline(file, token, ' ');
 	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
 	std::cout << "machineCount:" << machineCount << std::endl;
 
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 //		}
 		// 3) loopen over taken in volgorde van slack, als taak is schedulebaar (taak is niet bezig) en machine is vrij, schedulen.
 		//  for()
-		int timeT = 0;
+		unsigned long timeT = 0;
 		while (!x.everyTaskPlanned()) {
 			for (Job &j : x.jobs) {
 				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
 							if(!j.startTimeIsSet()) {
 								j.setStartTime(timeT);
 							}
-							j.setStopTime(j.getDuration());
+							j.setStopTime(currentTask.getDuration()+timeT);
 						}
 					}
 				}
@@ -154,13 +154,12 @@ int main(int argc, char **argv) {
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
 			unsigned long shortestTaskDuration = machines.at(0).getTimeBusy(); //Houdt bij hoelang de kortste ingeplande taak duurt.
 			for (Machine m : machines) {
-				if ((shortestTaskDuration > m.getTimeBusy())
-						&& (m.getTimeBusy() != 0)) {
+				if ((shortestTaskDuration > m.getTimeBusy()) || (shortestTaskDuration == 0)) {
 					shortestTaskDuration = m.getTimeBusy();
 				}
-				if(shortestTaskDuration == 0 && m.getTimeBusy() != 0) {
-					shortestTaskDuration = m.getTimeBusy();
-				}
+//				if(shortestTaskDuration == 0 && m.getTimeBusy() != 0) {
+//					shortestTaskDuration = m.getTimeBusy();
+//				}
 			}
 
 			//Update de tijd die de machines nog bezig zijn met de tijd van de machine die het kortst bezig is.

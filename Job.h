@@ -38,7 +38,8 @@ public:
   }
 
   bool isDone(){
-	  if(this->taskIterator + 1 >= this->tasks.size()) {
+	  unsigned long tIt = this->taskIterator;
+	  if(tIt + 1 >= this->tasks.size()) {
 		  return true;
 	  }
 	  return false;
