@@ -7,12 +7,12 @@
 
 #include "Job.h"
 
-Job::Job (int id):taskIterator(0),id(id), startTime(0), stopTime(0)
+Job::Job (int id):id(id),taskIterator(0), startTime(0), stopTime(0), slack(0)
 {
 
 }
 
-Job::Job (std::vector<Task> a_Tasks,int id): tasks(a_Tasks), taskIterator(0), id(id), startTime(0), stopTime(0)
+Job::Job (int id,std::vector<Task> a_Tasks):id(id), tasks(a_Tasks), taskIterator(0), startTime(0), stopTime(0), slack(0)
 {
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }
@@ -41,6 +41,11 @@ unsigned long Job::calcSlack(Job* longest_job) {
 bool Job::operator<(Job &j) {
 	if(this->slack < j.slack) {
 		return true;
+	}
+	if(this->slack == j.slack) {
+		if(this->id < j.id) {
+			return true;
+		}
 	}
 	return false;
 }

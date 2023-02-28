@@ -15,19 +15,19 @@ class Job
 {
 public:
   Job (int id);
-  Job (std::vector<Task> a_Tasks, int id);
+  Job (int id,std::vector<Task> a_Tasks);
   unsigned long calcSlack(Job* longest_job);
   unsigned long getDuration();
   virtual
   ~Job ();
+  int id;
   std::vector<Task> tasks;
-  unsigned long slack;
   unsigned long taskIterator;
   unsigned long startTime;
   unsigned long stopTime;
+  unsigned long slack;
   bool startTimeSet = false;
 
-  int id;
 
   void setStartTime(unsigned long time) {
 	  this->startTime = time;
