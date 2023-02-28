@@ -28,7 +28,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
-	//machineCount = 5;
+//	machineCount = 5;
 	for (unsigned long i = 0; i < machineCount; ++i) {
 		Machine m(i);
 		machines.push_back(m);
