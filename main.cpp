@@ -20,7 +20,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 
 	//Get amount of Jobs and Machines
 	std::string token;
-	std::getline(file, token);
+	std::getline(file, token, ' ');
 	unsigned long jobCount = std::stoi(token);
 	std::cout << "jobCount:" << jobCount << std::endl;
 	//std::getline(file, token, ' ');
@@ -43,7 +43,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		std::vector<std::string> v;
 
 		std::stringstream ss(token);
-
+		std::cout << "Parsing... " << ss.str() << std::endl;
 		std::string word;
 
 		Job xjob = Job(i);
@@ -55,8 +55,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 				machine = std::stoi(word);
 			} else {
 				duration = std::stoi(word);
-//				std::cout << "job " << i << " machine: " << machine
-//						<< " duration: " << duration << std::endl;
 				Task xTask = Task(machine, duration, TaskId);
 				TaskId++;
 				xjob.tasks.push_back(xTask);
@@ -86,12 +84,12 @@ int main(int argc, char **argv) {
 		for (Job &j : x.jobs) {
 			for (Task &t : j.tasks) {
 				std::cout << "Task " << t.getId() << " duration: "
-						<< t.getDuration() << std::endl;
+						<< t.getDuration() << " Machine: " << t.getMachineNr() << std::endl;
 			}
 		}
-//		for (Machine &m : machines) {
-//			std::cout << "Machine build with ID: " << m.id << std::endl;
-//		}
+		for (Machine &m : machines) {
+			std::cout << "Machine build with ID: " << m.id << std::endl;
+		}
 
 		//algorithm
 		//1) find longest task (i guess longest job?)
@@ -127,6 +125,7 @@ int main(int argc, char **argv) {
 												j.setStartTime(timeT);
 											}
 										}
+					std::cout << "Calling Machine: " << currentTask.getMachineNr() << std::endl;
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 					if (currentTask.isSchedulable()) {
@@ -185,8 +184,8 @@ int main(int argc, char **argv) {
 //			if(shortestTaskDuration == 0) {
 //				shortestTaskDuration = 100;
 //			}
-			std::cout << "MOVED " << shortestTaskDuration
-					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
+//			std::cout << "MOVED " << shortestTaskDuration
+//					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
 			timeT += shortestTaskDuration;
 
 		}
