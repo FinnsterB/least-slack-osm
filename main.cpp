@@ -23,7 +23,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::getline(file, token, ' ');
 	unsigned long jobCount = std::stoi(token);
 	std::cout << "jobCount:" << jobCount << std::endl;
-	std::getline(file, token, ' ');
+//	std::getline(file, token, ' ');
 	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
 	std::cout << "machineCount:" << machineCount << std::endl;
 
@@ -33,6 +33,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		Machine m(i);
 		machines.push_back(m);
 	}
+
 
 	//Loop door
 	int TaskId = 0;
@@ -125,7 +126,7 @@ int main(int argc, char **argv) {
 												j.setStartTime(timeT);
 											}
 										}
-					std::cout << "Calling Machine: " << currentTask.getMachineNr() << std::endl;
+				//	std::cout << "Calling Machine: " << currentTask.getMachineNr() << std::endl;
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 					if (currentTask.isSchedulable()) {
