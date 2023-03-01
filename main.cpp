@@ -23,17 +23,16 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	std::getline(file, token, ' ');
 	unsigned long jobCount = std::stoi(token);
 	std::cout << "jobCount:" << jobCount << std::endl;
-//	std::getline(file, token, ' ');
+	std::getline(file, token);
 	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
 	std::cout << "machineCount:" << machineCount << std::endl;
 
 	//create machines
-//	machineCount = 5;
+	//machineCount = 5;
 	for (unsigned long i = 0; i < machineCount; ++i) {
 		Machine m(i);
 		machines.push_back(m);
 	}
-
 
 	//Loop door
 	int TaskId = 0;
@@ -44,7 +43,7 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		std::vector<std::string> v;
 
 		std::stringstream ss(token);
-		std::cout << "Parsing... " << ss.str() << std::endl;
+
 		std::string word;
 
 		Job xjob = Job(i);
@@ -52,10 +51,15 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		int machine = 999;
 		int duration = 999;
 		while (ss >> word) { // Extract word from the stream.
+			std::cout << "Line: " << token << std::endl;
+
 			if (machine == 999) {
 				machine = std::stoi(word);
+				std::cout << "Machine: " << machine;
 			} else {
 				duration = std::stoi(word);
+//				std::cout << "job " << i << " machine: " << machine
+//						<< " duration: " << duration << std::endl;
 				Task xTask = Task(machine, duration, TaskId);
 				TaskId++;
 				xjob.tasks.push_back(xTask);
@@ -85,12 +89,12 @@ int main(int argc, char **argv) {
 		for (Job &j : x.jobs) {
 			for (Task &t : j.tasks) {
 				std::cout << "Task " << t.getId() << " duration: "
-						<< t.getDuration() << " Machine: " << t.getMachineNr() << std::endl;
+						<< t.getDuration() << std::endl;
 			}
 		}
-		for (Machine &m : machines) {
-			std::cout << "Machine build with ID: " << m.id << std::endl;
-		}
+//		for (Machine &m : machines) {
+//			std::cout << "Machine build with ID: " << m.id << std::endl;
+//		}
 
 		//algorithm
 		//1) find longest task (i guess longest job?)
@@ -114,29 +118,41 @@ int main(int argc, char **argv) {
 //		}
 		// 3) loopen over taken in volgorde van slack, als taak is schedulebaar (taak is niet bezig) en machine is vrij, schedulen.
 		//  for()
+//		for (Job &j : x.jobs) {
+//			if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
+//				Task &currentTask = j.tasks.at(j.taskIterator); //Een reference naar de taak die we willen inplannen.
+//				std::cout << "CurrentTask Duration: " << currentTask.getDuration();
+//			}
+//		}
 		unsigned long timeT = 0;
 		while (!x.everyTaskPlanned()) {
 			for (Job &j : x.jobs) {
 				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
 
 					Task &currentTask = j.tasks.at(j.taskIterator); //Een reference naar de taak die we willen inplannen.
-					if(currentTask.getDuration() == 0) {
-											j.taskIterator++;
-											if(!j.startTimeIsSet()) {
-												j.setStartTime(timeT);
-											}
-										}
-				//	std::cout << "Calling Machine: " << currentTask.getMachineNr() << std::endl;
+//					if(currentTask.getDuration() == 0) {
+//											j.taskIterator++;
+//											if(!j.startTimeIsSet()) {
+//												j.setStartTime(timeT);
+//											}
+//										}
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
-					if (currentTask.isSchedulable()) {
+					if (currentTask.isSchedulable() ) {
 						//if duration is 0 skip picking task and just ignore task.
+						std::cout << "I Come Here 0" << std::endl;
+						std::cout << "CurrentTAsk Duration: " << currentTask.getDuration() << std::endl;
+						std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
+
 						if(currentTask.getDuration() == 0 && currentMachine.getTimeBusy() != 0) {
+							std::cout << "I Come Here 1" << std::endl;
 							currentTask.setIfSchedulable(false);
 							j.taskIterator += 1;
 						}
-						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
+						if (currentMachine.getTimeBusy() == 0 && currentTask.getDuration() != 0) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(currentTask.getDuration());
+							std::cout << "I Come Here 2" << std::endl;
+
 							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
 							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
@@ -153,14 +169,15 @@ int main(int argc, char **argv) {
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
 			unsigned long shortestTaskDuration = machines.at(0).getTimeBusy(); //Houdt bij hoelang de kortste ingeplande taak duurt.
+			shortestTaskDuration = 0;
 			for (Machine m : machines) {
-				if ((shortestTaskDuration > m.getTimeBusy()) || (shortestTaskDuration == 0)) {
+				std::cout << "this machine is machine " << m.id << " and busy for " <<  m.getTimeBusy() << std::endl;
+				if ((shortestTaskDuration > m.getTimeBusy() && m.getTimeBusy() != 0) || (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
 					shortestTaskDuration = m.getTimeBusy();
 				}
-//				if(shortestTaskDuration == 0 && m.getTimeBusy() != 0) {
-//					shortestTaskDuration = m.getTimeBusy();
-//				}
 			}
+
+			std::cout << "machine shortest busy: " << shortestTaskDuration << std::endl;
 
 			//Update de tijd die de machines nog bezig zijn met de tijd van de machine die het kortst bezig is.
 			std::for_each(machines.begin(), machines.end(),
@@ -184,8 +201,8 @@ int main(int argc, char **argv) {
 //			if(shortestTaskDuration == 0) {
 //				shortestTaskDuration = 100;
 //			}
-//			std::cout << "MOVED " << shortestTaskDuration
-//					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
+			std::cout << "MOVED " << shortestTaskDuration
+					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
 			timeT += shortestTaskDuration;
 
 		}
@@ -208,4 +225,3 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
-

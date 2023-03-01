@@ -39,7 +39,8 @@ public:
 
   bool isDone(){
 	  unsigned long tIt = this->taskIterator;
-	  if(tIt + 1 >= this->tasks.size()) {
+	  std::cout << "tIt: " << tIt << " tasks Size: " << this->tasks.size() << std::endl;
+	  if(tIt >= this->tasks.size()) {
 		  return true;
 	  }
 	  return false;
