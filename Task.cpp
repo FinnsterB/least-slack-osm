@@ -50,3 +50,11 @@ unsigned long Task::getMachineNr() const {
 void Task::setMachineNr(unsigned long aMachineNr) {
 	machineNr = aMachineNr;
 }
+
+bool Task::isDone() {
+	return done;
+}
+
+void Task::setIfDone(bool aIsDone) {
+	done = aIsDone;
+}

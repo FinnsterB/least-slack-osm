@@ -26,28 +26,31 @@ public:
   unsigned long startTime;
   unsigned long stopTime;
   unsigned long slack;
-  bool startTimeSet = false;
 
-
+/*
+ * Only sets startTime when the first task is being planned. Use BEFORE taskIterator is incremented.
+ */
   void setStartTime(unsigned long time) {
-	  this->startTime = time;
-	  startTimeSet = true;
+	  if(taskIterator == 0){
+		  this->startTime = time;
+	  }
   }
-  void setStopTime(unsigned long time) {
-  	  this->stopTime = time;
+
+  /*
+   * Only sets stopTime after the last task is planned. Use AFTER taskIterator is incremented.
+   */
+  void addLastTaskToStopTime(unsigned long time) {
+	  if(isDone()){
+		  this->stopTime += time;
+	  }
   }
 
   bool isDone(){
 	  unsigned long tIt = this->taskIterator;
-	  std::cout << "tIt: " << tIt << " tasks Size: " << this->tasks.size() << std::endl;
 	  if(tIt >= this->tasks.size()) {
 		  return true;
 	  }
 	  return false;
-  }
-
-  bool startTimeIsSet(){
-	  return startTimeSet;
   }
 
   bool operator<(Job &j);

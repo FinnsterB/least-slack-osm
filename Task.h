@@ -16,7 +16,9 @@ public:
   Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id) ;
   unsigned long getId();
   unsigned long getDuration();
+  bool isDone();
   bool isSchedulable();
+  void setIfDone(bool isDone);
   void setIfSchedulable(bool isSchedulable);
 
   virtual
@@ -28,6 +30,7 @@ private:
   unsigned long machineNr;
   unsigned long duration;
   unsigned long id;
+  bool done;
   bool schedulable;
 };
 
