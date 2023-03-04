@@ -16,13 +16,16 @@ class Job
 public:
   Job (int id);
   Job (int id,std::vector<Task> a_Tasks);
+
   unsigned long calcSlack(Job* longest_job);
   unsigned long getDuration();
   virtual
   ~Job ();
   int id;
   std::vector<Task> tasks;
-  unsigned long taskIterator;
+  //unsigned long taskIterator;
+  std::vector<Task>::iterator taskIterator;
+
   unsigned long startTime;
   unsigned long stopTime;
   unsigned long slack;
@@ -38,9 +41,7 @@ public:
   }
 
   bool isDone(){
-	  unsigned long tIt = this->taskIterator;
-	  std::cout << "tIt: " << tIt << " tasks Size: " << this->tasks.size() << std::endl;
-	  if(tIt >= this->tasks.size()) {
+	  if(this->taskIterator == tasks.end()) {
 		  return true;
 	  }
 	  return false;

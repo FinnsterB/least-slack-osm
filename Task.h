@@ -23,6 +23,7 @@ public:
   ~Task ();
 	unsigned long getMachineNr() const;
 	void setMachineNr(unsigned long machineNr);//TODO: Niet nodig.
+	  bool done;
 
 private:
   unsigned long machineNr;

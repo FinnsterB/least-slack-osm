@@ -13,7 +13,7 @@ Task::Task ()
 }
 
 Task::Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id)
-:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1)
+:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1), done(0)
 {
   //std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }

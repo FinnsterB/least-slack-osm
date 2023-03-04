@@ -58,8 +58,8 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 				std::cout << "Machine: " << machine;
 			} else {
 				duration = std::stoi(word);
-//				std::cout << "job " << i << " machine: " << machine
-//						<< " duration: " << duration << std::endl;
+				std::cout <<"task" << TaskId << "job " << i << " machine: " << machine
+						<< " duration: " << duration << std::endl;
 				Task xTask = Task(machine, duration, TaskId);
 				TaskId++;
 				xjob.tasks.push_back(xTask);
@@ -67,7 +67,9 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 				duration = 999;
 			}
 		}
+		xjob.taskIterator = xjob.tasks.begin();
 		jobshop.jobs.push_back(xjob);
+
 	}
 	return jobshop;
 }
@@ -86,12 +88,12 @@ int main(int argc, char **argv) {
 		JobShop x = makeJobShop(file, machines);
 
 //	`	check if jobshop is build properly
-		for (Job &j : x.jobs) {
-			for (Task &t : j.tasks) {
-				std::cout << "Task " << t.getId() << " duration: "
-						<< t.getDuration() << std::endl;
-			}
-		}
+//		for (Job &j : x.jobs) {
+//			for (Task &t : j.tasks) {
+////				std::cout << "Task " << t.getId() << " duration: "
+////						<< t.getDuration() << std::endl;
+//			}
+//		}
 //		for (Machine &m : machines) {
 //			std::cout << "Machine build with ID: " << m.id << std::endl;
 //		}
@@ -125,46 +127,97 @@ int main(int argc, char **argv) {
 //			}
 //		}
 		unsigned long timeT = 0;
+		int i = 0;
+		for(Job& j : x.jobs) {
+			j.taskIterator = j.tasks.begin();
+		}
+		//x.jobs.at(0).taskIterator = x.jobs.at(0).tasks.begin();
+		std::cout << x.jobs.at(0).taskIterator->getId() << "TRACTOR" << std::endl;
 		while (!x.everyTaskPlanned()) {
 			for (Job &j : x.jobs) {
+				i++;
 				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
 
-					Task &currentTask = j.tasks.at(j.taskIterator); //Een reference naar de taak die we willen inplannen.
+					//Task &currentTask = j.tasks.at(j.taskIterator->getId()); //Een reference naar de taak die we willen inplannen.
 //					if(currentTask.getDuration() == 0) {
 //											j.taskIterator++;
 //											if(!j.startTimeIsSet()) {
 //												j.setStartTime(timeT);
 //											}
 //										}
+					std::cout << "TESTJE TASK ITERATOR:" << j.taskIterator->getId() << std::endl;
+					std::cout << "TESTJE TASK ITERATOR:" << j.taskIterator->getMachineNr() << std::endl;
+
 					Machine &currentMachine = machines.at(
-							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
-					if (currentTask.isSchedulable() ) {
+							j.taskIterator->getMachineNr()); //Een reference naar de machine die we willen inplannen.
+					std::cout << "HIER KOM IK VERMOEDELIJKE NIET" << std::endl;
+
+					//euhm... dit werkt niet.. want taakIDs zijn niet per job maar over alle taken.
+					//gaat dus fout op tasks.at(i)
+					bool tasksBeforeSelectedDone = true;
+//					int selectedID = j.taskIterator->getId(); //begint te tellen bij 0
+//
+//					for(Task& t : j.tasks) {
+//						if(j.taskIterator->getId() >= selectedID) {
+//							tasksBeforeSelectedDone = true;
+//						}
+//					}
+					//if first task, always done
+//					if(j.taskIterator->getId() == j.tasks.at(0).getId()) {
+//						tasksBeforeSelectedDone = true;
+//					}
+					std::cout << tasksBeforeSelectedDone << "WAT?" << std::endl;
+					//tasksBeforeSelectedDone = true;
+					if (j.taskIterator->isSchedulable() && tasksBeforeSelectedDone) {
 						//if duration is 0 skip picking task and just ignore task.
-						std::cout << "I Come Here 0" << std::endl;
-						std::cout << "CurrentTAsk Duration: " << currentTask.getDuration() << std::endl;
-						std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
+//						std::cout << "I Come Here 0" << std::endl;
+//						std::cout << "CurrentTAsk Duration: " << currentTask.getDuration() << std::endl;
+//						std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
 
-						if(currentTask.getDuration() == 0 && currentMachine.getTimeBusy() != 0) {
-							std::cout << "I Come Here 1" << std::endl;
-							currentTask.setIfSchedulable(false);
+						if(j.taskIterator->getDuration() == 0 && currentMachine.getTimeBusy() != 0) {
+						//	std::cout << "I Come Here 1" << std::endl;
+							std::cout << "Ik kom hier i: " << i <<std::endl;
+							j.taskIterator->setIfSchedulable(false);
+
+//							unsigned long oldTaskIt = j.taskIterator->getId();
+//							for(Task& t : j.tasks) {
+//								if(t.getId() - 1 == oldTaskIt) {
+//									j.taskIterator = &t;
+//								}
+//							}
 							j.taskIterator += 1;
-						}
-						if (currentMachine.getTimeBusy() == 0 && currentTask.getDuration() != 0) {//Kijk of de machine vrij is.
-							currentMachine.setTimeBusy(currentTask.getDuration());
-							std::cout << "I Come Here 2" << std::endl;
 
-							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
+							if(!j.startTimeIsSet()) {
+								j.setStartTime(timeT);
+							}
+						}
+						if (currentMachine.getTimeBusy() == 0 && j.taskIterator->getDuration() != 0) {//Kijk of de machine vrij is.
+
+							currentMachine.setTimeBusy(j.taskIterator->getDuration());
+							currentMachine.currentRunningTask = &*j.taskIterator;
+						//	std::cout << "I Come Here 2" << std::endl;
+
+							j.taskIterator->setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
+//							unsigned long oldTaskIt = j.taskIterator->getId();
+//							for(Task& t : j.tasks) {
+//								if(t.getId() - 1 == oldTaskIt) {
+//									j.taskIterator = &t;
+//								}
+//							}
 							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
 							std::cout << "SCHEDULED TASK NR: "
-									<< currentTask.getId() << " TO MACHINE NR: "
+									<< j.taskIterator->getId() << " FROM JOB " << j.id << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
 
 							if(!j.startTimeIsSet()) {
 								j.setStartTime(timeT);
 							}
-							j.setStopTime(currentTask.getDuration()+timeT);
+							j.setStopTime(j.taskIterator->getDuration()+timeT);
 						}
 					}
+				}
+				else {
+					std::cout << "Job is Done" << std::endl;
 				}
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
@@ -188,17 +241,22 @@ int main(int argc, char **argv) {
 						}
 					});
 			//Update de slack van elke Job.
-			std::for_each(x.jobs.begin(), x.jobs.end(),
-					[shortestTaskDuration](Job &job) {
-						if (job.slack >= shortestTaskDuration) {
-							job.slack -= shortestTaskDuration;
-						}
-					});
+//			std::for_each(x.jobs.begin(), x.jobs.end(),
+//					[shortestTaskDuration](Job &job) {
+//						if (job.slack >= shortestTaskDuration) {
+//							job.slack -= shortestTaskDuration;
+//						}
+//					});
+			//Update de slack van elke Job.
+			for (Job &j : x.jobs) {
+				j.calcSlack(longest_job);
+			}
+
 			//Sorteer opnieuw de Jobs op slack.
 			std::sort(x.jobs.begin(), x.jobs.end()); //Gebruikt operator<() die op slack controleert.
 
 			//shortest task duratoin is 0?
-//			if(shortestTaskDuration == 0) {
+//			if(shortestTaskDuration == 1) {
 //				shortestTaskDuration = 100;
 //			}
 			std::cout << "MOVED " << shortestTaskDuration
@@ -209,7 +267,7 @@ int main(int argc, char **argv) {
 
 		//sort on job id
 		sort(x.jobs.begin(), x.jobs.end(),
-		    [](const Job & a, const Job & b) -> bool
+		    [](const Job & a, const Job & b)
 		{
 		    return a.id < b.id;
 		});
@@ -218,6 +276,7 @@ int main(int argc, char **argv) {
 		for(Job &j : x.jobs) {
 			std::cout << j.id << " " << j.startTime << " " << (j.getDuration()+j.startTime) << std::endl;
 		}
+		std::cout << "end program" << std::endl;
 
 	} else {
 		std::cout << "No file provided" << '\n';

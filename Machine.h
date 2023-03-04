@@ -5,6 +5,8 @@
  *      Author: marcv
  */
 
+#include "Task.h"
+
 #ifndef MACHINE_H_
 #define MACHINE_H_
 
@@ -13,6 +15,8 @@ class Machine
 public:
 	unsigned long id;
 	unsigned long timeBusy;
+	Task* currentRunningTask = nullptr;
+	//bool available = true;
 	Machine(unsigned long id);
 	virtual ~Machine();
 	bool operator<(const Machine& rhs);
