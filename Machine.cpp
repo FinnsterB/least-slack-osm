@@ -17,7 +17,7 @@ Machine::~Machine() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned long Machine::getTimeBusy() {
+unsigned long Machine::getTimeBusy() const {
 	if(current != 0){
 		return current->getDuration();
 	}

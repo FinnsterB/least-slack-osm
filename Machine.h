@@ -17,7 +17,7 @@ public:
 	Machine(unsigned long id);
 	virtual ~Machine();
 	void setCurrentTaskDone();
-	unsigned long getTimeBusy();
+	unsigned long getTimeBusy() const;
 	bool isFree();
 	void moveTime(unsigned long time);
 	void setTimeBusy(unsigned long time);

@@ -138,14 +138,26 @@ int main(int argc, char **argv) {
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
 			unsigned long shortestTaskDuration = 0; //Houdt bij hoelang de kortste ingeplande taak duurt.
-			for (Machine &m : machines) {
-				if ((shortestTaskDuration > m.getTimeBusy()
-						&& m.getTimeBusy() != 0)
-						|| (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
-					shortestTaskDuration = m.getTimeBusy();
-				}
-			}
+			shortestTaskDuration--;
+			unsigned long compShort = shortestTaskDuration;
+			//shortestTaskDuration = *longest.getTimeBusy();
 
+			for (Machine &m : machines) {
+
+				if(m.getTimeBusy() != 0){
+					if(m.getTimeBusy() < shortestTaskDuration){
+						shortestTaskDuration = m.getTimeBusy();
+					}
+				}
+//				if ((shortestTaskDuration > m.getTimeBusy()
+//						&& m.getTimeBusy() != 0)
+//						|| (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
+//					shortestTaskDuration = m.getTimeBusy();
+//				}
+			}
+			if(shortestTaskDuration == compShort){
+				shortestTaskDuration  = 0;
+			}
 			//Update de tijd die de machines nog bezig zijn met de tijd van de machine die het kortst bezig is.
 			for (Machine &m : machines) {
 				if (m.getTimeBusy() >= shortestTaskDuration) {
