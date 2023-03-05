@@ -9,14 +9,15 @@
 
 #ifndef MACHINE_H_
 #define MACHINE_H_
+#include "Task.h"
 
 class Machine
 {
 public:
 	unsigned long id;
 	unsigned long timeBusy;
-	Task* currentRunningTask = nullptr;
-	//bool available = true;
+
+	Task* current;
 	Machine(unsigned long id);
 	virtual ~Machine();
 	bool operator<(const Machine& rhs);

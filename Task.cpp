@@ -12,8 +12,8 @@ Task::Task ()
   // TODO Auto-generated constructor stub
 }
 
-Task::Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id)
-:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1), done(0)
+Task::Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id, unsigned long job_id)
+:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1), done(0),JobId(job_id)
 {
   //std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }
@@ -49,4 +49,12 @@ unsigned long Task::getMachineNr() const {
 
 void Task::setMachineNr(unsigned long aMachineNr) {
 	machineNr = aMachineNr;
+}
+
+bool Task::isDone() {
+	return done;
+}
+
+void Task::setIfDone(bool aIsDone) {
+	done = aIsDone;
 }

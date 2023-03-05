@@ -7,7 +7,7 @@
 
 #include "Machine.h"
 
-Machine::Machine(unsigned long anId):id(anId), timeBusy(0)
+Machine::Machine(unsigned long anId):id(anId), timeBusy(0), current(nullptr)
 {
 	// TODO Auto-generated constructor stub
 

@@ -13,10 +13,14 @@ class Task
 {
 public:
   Task ();
-  Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id) ;
+  Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id, unsigned long job_id) ;
   unsigned long getId();
+  unsigned long getJobId() {return this->JobId;}
+
   unsigned long getDuration();
+  bool isDone();
   bool isSchedulable();
+  void setIfDone(bool isDone);
   void setIfSchedulable(bool isSchedulable);
 
   virtual
@@ -29,6 +33,7 @@ private:
   unsigned long machineNr;
   unsigned long duration;
   unsigned long id;
+  unsigned long JobId;
   bool schedulable;
 };
 

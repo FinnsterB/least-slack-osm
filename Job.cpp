@@ -7,12 +7,12 @@
 
 #include "Job.h"
 
-Job::Job (int id):id(id), startTime(0), stopTime(0), slack(0)
+Job::Job (int id):id(id), startTime(0), stopTime(0), slack(0), taskIterator(tasks.begin())
 {
 
 }
 
-Job::Job (int id,std::vector<Task> a_Tasks):id(id), startTime(0), stopTime(0), slack(0)
+Job::Job (int id,std::vector<Task> a_Tasks):id(id), startTime(0), stopTime(0), slack(0), taskIterator(tasks.begin())
 {
   std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }

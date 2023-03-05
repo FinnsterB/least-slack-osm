@@ -29,26 +29,37 @@ public:
   unsigned long startTime;
   unsigned long stopTime;
   unsigned long slack;
-  bool startTimeSet = false;
+  bool startisset = false;
 
-
+/*
+ * Only sets startTime when the first task is being planned. Use BEFORE taskIterator is incremented.
+ */
   void setStartTime(unsigned long time) {
-	  this->startTime = time;
-	  startTimeSet = true;
+	  if(taskIterator == tasks.begin()){
+		  this->startTime = time;
+	  }
+	  this->startisset = true;
   }
-  void setStopTime(unsigned long time) {
-  	  this->stopTime = time;
+  bool startTimeIsSet() {
+	  return this->startisset;
+  }
+  /*
+   * Only sets stopTime after the last task is planned. Use AFTER taskIterator is incremented.
+   */
+  void addLastTaskToStopTime(unsigned long time) {
+	  if(this->isDone()){
+		  this->stopTime += time;
+	  }
   }
 
   bool isDone(){
-	  if(this->taskIterator == tasks.end()) {
-		  return true;
+	  bool done = true;
+	  for(Task t : tasks) {
+		  if(t.isDone() == false) {
+			  done = false;
+		  }
 	  }
-	  return false;
-  }
-
-  bool startTimeIsSet(){
-	  return startTimeSet;
+	  return done;
   }
 
   bool operator<(Job &j);
