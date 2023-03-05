@@ -20,6 +20,7 @@ public:
   bool isSchedulable();
   void setIfDone(bool isDone);
   void setIfSchedulable(bool isSchedulable);
+  void setDuration(unsigned long time);
 
   virtual
   ~Task ();

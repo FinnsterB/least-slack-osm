@@ -7,29 +7,46 @@
 
 #include "Machine.h"
 
-Machine::Machine(unsigned long anId):id(anId), timeBusy(0), current(0)
-{
+Machine::Machine(unsigned long anId) :
+		id(anId), current(0) {
 	// TODO Auto-generated constructor stub
 
 }
 
-Machine::~Machine()
-{
+Machine::~Machine() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned long
-Machine::getTimeBusy () const
-{
-  return timeBusy;
+unsigned long Machine::getTimeBusy() {
+	if(current != 0){
+		return current->getDuration();
+	}
+	return 0;
 }
 
-void
-Machine::setTimeBusy (unsigned long aTimeBusy)
-{
-  timeBusy = aTimeBusy;
+//Beweegt naar voren in de tijd.
+void Machine::moveTime(unsigned long time) {
+	if (current != 0) {
+		current->setDuration(current->getDuration() - time);
+	}
 }
 
-bool Machine::operator <(const Machine &rhs) {
-	return timeBusy < rhs.getTimeBusy();
+bool Machine::isFree() {
+	if(current != 0){
+		return current->isDone();
+	}
+	return true;
+}
+
+//Stelt de tijd in.
+void Machine::setTimeBusy(unsigned long time) {
+	if (current != 0) {
+		current->setDuration(time);
+	}
+}
+
+void Machine::setCurrentTaskDone() {
+	if(current != 0){
+		current->setIfDone(true);
+	}
 }

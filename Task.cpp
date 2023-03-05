@@ -13,17 +13,17 @@ Task::Task ()
 }
 
 Task::Task (unsigned long a_machineNr, unsigned long a_duration, unsigned long a_id)
-:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1)
+:machineNr(a_machineNr), duration(a_duration), id(a_id), schedulable(1), done(0)
 {
   //std::cerr << __PRETTY_FUNCTION__ << std::endl;
 }
 
 unsigned long Task::getDuration(){
-	return this->duration;
+	return duration;
 }
 
 unsigned long Task::getId(){
-	return this->id;
+	return id;
 }
 
 bool
@@ -57,4 +57,8 @@ bool Task::isDone() {
 
 void Task::setIfDone(bool aIsDone) {
 	done = aIsDone;
+}
+
+void Task::setDuration(unsigned long time) {
+	duration = time;
 }

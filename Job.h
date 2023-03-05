@@ -14,13 +14,13 @@
 class Job
 {
 public:
-  Job (int id);
-  Job (int id,std::vector<Task> a_Tasks);
+  Job (unsigned long id);
+  Job (unsigned long id,std::vector<Task> a_Tasks);
   unsigned long calcSlack(Job* longest_job);
   unsigned long getDuration();
   virtual
   ~Job ();
-  int id;
+  unsigned long id;
   std::vector<Task> tasks;
   unsigned long taskIterator;
   unsigned long startTime;
@@ -46,13 +46,13 @@ public:
   }
 
   bool isDone(){
-	  unsigned long tIt = this->taskIterator;
-	  if(tIt >= this->tasks.size()) {
+	  if(taskIterator >= this->tasks.size()) {
 		  return true;
 	  }
 	  return false;
   }
 
+  bool previousTaskDone();
   bool operator<(Job &j);
 private:
 };

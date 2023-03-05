@@ -30,7 +30,7 @@ JobShop::~JobShop ()
 
 bool JobShop::everyTaskPlanned() {
 	for(Job& j: jobs){
-		if(j.taskIterator < j.tasks.size() - 1){
+		if(j.taskIterator < j.tasks.size()){
 			return false;
 		}
 	}

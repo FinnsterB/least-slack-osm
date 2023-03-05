@@ -115,23 +115,21 @@ int main(int argc, char **argv) {
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 
-					if (currentTask.isSchedulable() ) {
-						std::cout << "CurrentTask Duration: " << currentTask.getDuration() << std::endl;
-						std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
+					if (currentTask.isSchedulable() && j.previousTaskDone()) {
+						//std::cout << "CurrentTask Duration: " << currentTask.getDuration() << " CurrentTask id: " << currentTask.getId() << " from job: " << j.id<< std::endl;
+						//std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
 
-						if (currentMachine.getTimeBusy() == 0) {//Kijk of de machine vrij is.
-							currentMachine.setTimeBusy(currentTask.getDuration());
+						if (currentMachine.isFree()) {//Kijk of de machine vrij is.
+							currentMachine.setTimeBusy(
+									currentTask.getDuration());
 							j.setStartTime(timeT);
-							currentTask.setIfSchedulable(false);//De taak is nu ingepland en kan verder genegeerd worden.
+							currentTask.setIfSchedulable(false);//De taak is nu ingepland.
 							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
+							currentMachine.current = &currentTask;
 							std::cout << "SCHEDULED TASK NR: "
-									<< currentTask.getId() << " TO MACHINE NR: "
+									<< currentTask.getId() << " FROM JOB NR: "
+									<< j.id << " TO MACHINE NR: "
 									<< currentMachine.id << std::endl;
-						}else if(currentTask.getDuration() == 0){
-							//Wanneer de taak
-							j.setStartTime(timeT);
-							currentTask.setIfSchedulable(false);
-							j.taskIterator += 1;
 						}
 
 						j.addLastTaskToStopTime(currentTask.getDuration());
@@ -139,22 +137,24 @@ int main(int argc, char **argv) {
 				}
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
-			unsigned long shortestTaskDuration = machines.at(0).getTimeBusy(); //Houdt bij hoelang de kortste ingeplande taak duurt.
-			shortestTaskDuration = 0;
-			for (Machine m : machines) {
-				if ((shortestTaskDuration > m.getTimeBusy() && m.getTimeBusy() != 0) || (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
+			unsigned long shortestTaskDuration = 0; //Houdt bij hoelang de kortste ingeplande taak duurt.
+			for (Machine &m : machines) {
+				if ((shortestTaskDuration > m.getTimeBusy()
+						&& m.getTimeBusy() != 0)
+						|| (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
 					shortestTaskDuration = m.getTimeBusy();
 				}
 			}
 
 			//Update de tijd die de machines nog bezig zijn met de tijd van de machine die het kortst bezig is.
-			std::for_each(machines.begin(), machines.end(),
-					[shortestTaskDuration](Machine &m) {
-						if (m.getTimeBusy() >= shortestTaskDuration) {
-							m.setTimeBusy(
-									m.getTimeBusy() - shortestTaskDuration);
-						}
-					});
+			for (Machine &m : machines) {
+				if (m.getTimeBusy() >= shortestTaskDuration) {
+					m.moveTime(shortestTaskDuration);
+				}
+				if (m.getTimeBusy() == 0) {
+					m.setCurrentTaskDone();
+				}
+			}
 
 			//Update de slack van elke Job.
 			std::for_each(x.jobs.begin(), x.jobs.end(),
@@ -171,24 +171,25 @@ int main(int argc, char **argv) {
 					<< " TIME-UNITS INTO THE FUTURE" << std::endl;
 			timeT += shortestTaskDuration;
 
-			std::for_each(x.jobs.begin(), x.jobs.end(), [shortestTaskDuration](Job& j){
-				if(!j.isDone()){
-					j.stopTime += shortestTaskDuration;
-				}
-			});
+			std::for_each(x.jobs.begin(), x.jobs.end(),
+					[shortestTaskDuration](Job &j) {
+						if (!j.isDone()) {
+							j.stopTime += shortestTaskDuration;
+						}
+					});
 
 		}
 
 		//sort on job id
 		sort(x.jobs.begin(), x.jobs.end(),
-		    [](const Job & a, const Job & b) -> bool
-		{
-		    return a.id < b.id;
-		});
+				[](const Job &a, const Job &b) -> bool {
+					return a.id < b.id;
+				});
 
 		std::cout << "----------OUTPUT-------------" << std::endl;
-		for(Job &j : x.jobs) {
-			std::cout << j.id << " " << j.startTime << " " << j.stopTime << std::endl;
+		for (Job &j : x.jobs) {
+			std::cout << j.id << " " << j.startTime << " " << j.stopTime
+					<< std::endl;
 		}
 
 	} else {

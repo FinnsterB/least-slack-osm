@@ -13,15 +13,14 @@ class Machine
 {
 public:
 	unsigned long id;
-	unsigned long timeBusy;
 	Task* current;
 	Machine(unsigned long id);
 	virtual ~Machine();
-	bool operator<(const Machine& rhs);
-	unsigned long
-	getTimeBusy() const;
-	void
-	setTimeBusy(unsigned long timeBusy);
+	void setCurrentTaskDone();
+	unsigned long getTimeBusy();
+	bool isFree();
+	void moveTime(unsigned long time);
+	void setTimeBusy(unsigned long time);
 };
 
 #endif /* MACHINE_H_ */
