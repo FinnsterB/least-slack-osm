@@ -14,7 +14,7 @@
 #include <sstream>
 #include <algorithm>
 
-//Function to make jobshop from file.
+//Functie maakt een JobShop klasse van een bestand.
 JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	JobShop jobshop;
 
@@ -59,8 +59,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 				std::cout << "Machine: " << machine;
 			} else {
 				duration = std::stoi(word);
-//				std::cout << "job " << i << " machine: " << machine
-//						<< " duration: " << duration << std::endl;
 				Task xTask = Task(machine, duration, TaskId);
 				TaskId++;
 				xjob.tasks.push_back(xTask);
@@ -93,8 +91,11 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		//algorithm
-		//1) find longest task (i guess longest job?)
+
+
+
+		//algoritme
+		//1) Zoek de langste Job
 
 		Job *longest_job = x.getLongestJob();
 
@@ -106,7 +107,7 @@ int main(int argc, char **argv) {
 		//sorteer Jobs op slack
 		std::sort(x.jobs.begin(), x.jobs.end());//Gebruikt operator<() die op slack controleert.
 
-		unsigned long timeT = 0;
+		unsigned long timeT = 0;//Variabele om de globale tijd in het systeem bij te houden.
 		while (!x.everyTaskPlanned()) {
 			for (Job &j : x.jobs) {
 				if (!j.isDone()) {//Check of de job niet klaar is. Anders gaat hij buiten de vector....
@@ -115,10 +116,8 @@ int main(int argc, char **argv) {
 					Machine &currentMachine = machines.at(
 							currentTask.getMachineNr()); //Een reference naar de machine die we willen inplannen.
 
+					//Onderstaand wordt gecheckt of de taken schedulable zijn en of de voorgaande taak van een job klaar is.
 					if (currentTask.isSchedulable() && j.previousTaskDone()) {
-						//std::cout << "CurrentTask Duration: " << currentTask.getDuration() << " CurrentTask id: " << currentTask.getId() << " from job: " << j.id<< std::endl;
-						//std::cout << "CurrentMachine " << currentMachine.id << "  TimeBusy: " << currentMachine.getTimeBusy() << std::endl;
-
 						if (currentMachine.isFree()) {//Kijk of de machine vrij is.
 							currentMachine.setTimeBusy(
 									currentTask.getDuration());
@@ -138,9 +137,8 @@ int main(int argc, char **argv) {
 			}
 			//Verkrijg de kortste tijd die een machine nog te draaien heeft.
 			unsigned long shortestTaskDuration = 0; //Houdt bij hoelang de kortste ingeplande taak duurt.
-			shortestTaskDuration--;
-			unsigned long compShort = shortestTaskDuration;
-			//shortestTaskDuration = *longest.getTimeBusy();
+			shortestTaskDuration--; //Even een stomme manier om de hoogst mogelijke waarde te krijgen.
+			unsigned long compShort = shortestTaskDuration; // Variabele om te kijken of shortestTaskDuration is veranderd.
 
 			for (Machine &m : machines) {
 
@@ -149,11 +147,6 @@ int main(int argc, char **argv) {
 						shortestTaskDuration = m.getTimeBusy();
 					}
 				}
-//				if ((shortestTaskDuration > m.getTimeBusy()
-//						&& m.getTimeBusy() != 0)
-//						|| (shortestTaskDuration == 0 && m.getTimeBusy() != 0)) {
-//					shortestTaskDuration = m.getTimeBusy();
-//				}
 			}
 			if(shortestTaskDuration == compShort){
 				shortestTaskDuration  = 0;
