@@ -9,14 +9,22 @@
 #define MACHINE_H_
 #include "Task.h"
 
+struct TaskPos{
+	unsigned long jobId;
+	unsigned long taskId;
+	bool accesible;
+};
+
 class Machine
 {
 public:
 	unsigned long id;
-	Task* current;
+	Task* currentTaskPointer;
+	//TaskPos currentTask;
+	unsigned long currentJob;
 	Machine(unsigned long id);
 	virtual ~Machine();
-	void setCurrentTaskDone();
+	void setPreviousTaskDone();
 	unsigned long getTimeBusy() const;
 	bool isFree();
 	void moveTime(unsigned long time);

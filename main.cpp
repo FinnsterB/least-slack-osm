@@ -124,7 +124,8 @@ int main(int argc, char **argv) {
 							j.setStartTime(timeT);
 							currentTask.setIfSchedulable(false);//De taak is nu ingepland.
 							j.taskIterator += 1;//Voor deze job kan de volgende ronde een andere taak ingepland worden.
-							currentMachine.current = &currentTask;
+							currentMachine.currentTaskPointer = &currentTask;
+							currentMachine.currentJob = j.id;
 							std::cout << "SCHEDULED TASK NR: "
 									<< currentTask.getId() << " FROM JOB NR: "
 									<< j.id << " TO MACHINE NR: "
@@ -156,9 +157,6 @@ int main(int argc, char **argv) {
 				if (m.getTimeBusy() >= shortestTaskDuration) {
 					m.moveTime(shortestTaskDuration);
 				}
-				if (m.getTimeBusy() == 0) {
-					m.setCurrentTaskDone();
-				}
 			}
 
 			//Update de slack van elke Job.
@@ -182,6 +180,13 @@ int main(int argc, char **argv) {
 							j.stopTime += shortestTaskDuration;
 						}
 					});
+			//Update machine pointers
+			for(Machine& m : machines){
+				auto newPos = std::find_if(x.jobs.begin(), x.jobs.end(), [m](Job& j){ return j.id == m.currentJob;});
+				if(!newPos->isDone()){
+					m.currentTaskPointer = &(newPos->tasks.at(newPos->taskIterator));
+				}
+			}
 
 		}
 

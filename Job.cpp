@@ -39,7 +39,7 @@ bool Job::previousTaskDone() {
 	if(taskIterator == 0){
 		return true;
 	}
-	return tasks.at(taskIterator-1).isDone();
+	return tasks.at(taskIterator-1).getDuration() == 0;
 }
 
 bool Job::operator<(Job &j) {

@@ -8,7 +8,7 @@
 #include "Machine.h"
 
 Machine::Machine(unsigned long anId) :
-		id(anId), current(0) {
+		id(anId), currentTaskPointer(0), currentJob(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -18,35 +18,29 @@ Machine::~Machine() {
 }
 
 unsigned long Machine::getTimeBusy() const {
-	if(current != 0){
-		return current->getDuration();
+	if(currentTaskPointer != 0){
+		return currentTaskPointer->getDuration();
 	}
 	return 0;
 }
 
 //Beweegt naar voren in de tijd.
 void Machine::moveTime(unsigned long time) {
-	if (current != 0) {
-		current->setDuration(current->getDuration() - time);
+	if (currentTaskPointer != 0) {
+		currentTaskPointer->setDuration(currentTaskPointer->getDuration() - time);
 	}
 }
 
 bool Machine::isFree() {
-	if(current != 0){
-		return current->isDone();
+	if(currentTaskPointer != 0){
+		return currentTaskPointer->isDone();
 	}
 	return true;
 }
 
 //Stelt de tijd in.
 void Machine::setTimeBusy(unsigned long time) {
-	if (current != 0) {
-		current->setDuration(time);
-	}
-}
-
-void Machine::setCurrentTaskDone() {
-	if(current != 0){
-		current->setIfDone(true);
+	if (currentTaskPointer != 0) {
+		currentTaskPointer->setDuration(time);
 	}
 }

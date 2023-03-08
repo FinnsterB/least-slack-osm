@@ -18,7 +18,6 @@ public:
   unsigned long getDuration();
   bool isDone();
   bool isSchedulable();
-  void setIfDone(bool isDone);
   void setIfSchedulable(bool isSchedulable);
   void setDuration(unsigned long time);
 
@@ -31,7 +30,6 @@ private:
   unsigned long machineNr;
   unsigned long duration;
   unsigned long id;
-  bool done;
   bool schedulable;
 };
 
