@@ -1,22 +1,25 @@
 /*
  * JobShop.h
  *
- *  Created on: Feb 17, 2023
+ *  Created on: Mar 9, 2023
  *      Author: finn
  */
 
 #ifndef JOBSHOP_H_
 #define JOBSHOP_H_
 #include "Job.h"
-#include <iostream>
+#include "Machine.h"
 #include <vector>
-class JobShop
-{
+
+class JobShop {
 public:
-  std::vector<Job> jobs;
-  JobShop ();
-  virtual
-  ~JobShop ();
+	JobShop();
+	virtual ~JobShop();
+	void schedule();
+	bool done();
+	void sortById();
+	std::vector<Job> jobs;
+	std::vector<Machine> machines;
 };
 
 #endif /* JOBSHOP_H_ */

@@ -1,26 +1,17 @@
 /*
  * Job.cpp
  *
- *  Created on: Feb 17, 2023
+ *  Created on: Mar 9, 2023
  *      Author: finn
  */
 
 #include "Job.h"
 
-Job::Job ()
-{
-  // TODO Auto-generated constructor stub
-
+Job::Job(unsigned long anId):id(anId), slack(0), totalDurationOnStart(0), started(false), finished(false), start(0), end(0) {
+	// TODO Auto-generated constructor stub
 }
 
-Job::Job (std::vector<Task> a_Tasks): tasks(a_Tasks)
-{
-  std::cerr << __PRETTY_FUNCTION__ << std::endl;
-
-}
-
-Job::~Job ()
-{
-  // TODO Auto-generated destructor stub
+Job::~Job() {
+	// TODO Auto-generated destructor stub
 }
 
