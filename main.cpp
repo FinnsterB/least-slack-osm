@@ -67,29 +67,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 }
 
 int main(int argc, char **argv) {
-//	std::vector<std::pair<unsigned long, unsigned long>> input;
-//	input = { { 0, 60 }, { 1, 15 }, { 2, 10 } };
-//	std::vector<std::pair<unsigned long, unsigned long>> input1;
-//	input1 = { { 0, 30 }, { 1, 30 }, { 2, 10 } };
-//
-//	JobShop j;
-//	Job job1(0);
-//	Job job2(1);
-//	unsigned long machineId = 0;
-//	for (auto pair : input) {
-//		job1.tasks.push(Task(pair.first, pair.second));
-//		j.machines.push_back(Machine(machineId));
-//		job1.totalDurationOnStart += pair.second;
-//		machineId++;
-//	}
-//	for (auto pair : input1) {
-//		job2.tasks.push(Task(pair.first, pair.second));
-//		job2.totalDurationOnStart += pair.second;
-//	}
-//	j.jobs.push_back(job1);
-//	j.jobs.push_back(job2);
-//	j.schedule();
-
 	if (argc < 2) {
 		std::cout << "No path provided" << '\n';
 	}
