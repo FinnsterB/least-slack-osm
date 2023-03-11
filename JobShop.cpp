@@ -127,12 +127,14 @@ void JobShop::schedule() {
 }
 
 bool JobShop::done() {
-	for (Job &j : jobs) {
-		if(j.finished == false){
-			return false;
+	auto ita = jobs.begin();
+	bool returnV = true;
+	std::for_each(jobs.begin(),jobs.end(), [&](const Job& s){
+		if(!s.finished) {
+			returnV = false;
 		}
-	}
-	return true;
+	});
+	return returnV;
 }
 
 void JobShop::sortById() {
