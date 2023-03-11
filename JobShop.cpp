@@ -126,7 +126,8 @@ void JobShop::schedule() {
 
 bool JobShop::done() {
 	for (Job &j : jobs) {
-		if (!j.tasks.empty()) {
+		if(j.end == 0){
+		//if (!j.tasks.empty()) {
 			return false;
 		}
 	}
