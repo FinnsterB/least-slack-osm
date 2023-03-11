@@ -54,21 +54,23 @@ void JobShop::schedule() {
 
 				//lambda that checks all preconditions
 				auto shouldDoTask = [*this, j, currentMachine]() {
-					if (currentMachine.busy) {
+					if (currentMachine.busy) { //if currentmachine busy, not schedulable
 						return false;
 					}
-					for (Machine m : machines) {
+					for (Machine m : machines) { //if job is still running, then tasks before this tasks are still running so this task cant run
 						if ((m.currentJobId == j.id)) {
 							if (m.busy) {
 								return false;
 							}
 						}
 					}
+					//if macine is free and task before selected tasks are done, task is schedulable
 					return true;
 				};
 
 				//checks with lambda if task should be planned
 				if (shouldDoTask()) {
+					//set currenttask on currentmachine
 					currentMachine.currentTask = currentTask;
 					currentMachine.busy = true;
 					currentMachine.currentJobId = j.id;
@@ -84,7 +86,7 @@ void JobShop::schedule() {
 
 		//calculate shortest time left on a machine
 		unsigned long shortestTimeLeft = 0;
-		shortestTimeLeft--;
+		shortestTimeLeft--; //overflow value, for checkingin loop
 		for (Machine &m : machines) {
 			if ((m.currentTask.duration < shortestTimeLeft) && m.busy) {
 				shortestTimeLeft = m.currentTask.duration;
@@ -127,7 +129,6 @@ void JobShop::schedule() {
 bool JobShop::done() {
 	for (Job &j : jobs) {
 		if(j.end == 0){
-		//if (!j.tasks.empty()) {
 			return false;
 		}
 	}
