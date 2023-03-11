@@ -18,10 +18,37 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 
 	//Get amount of Jobs and Machines
 	std::string token;
-	std::getline(file, token, ' ');
-	unsigned long jobCount = std::stoi(token);
 	std::getline(file, token);
-	unsigned long machineCount = std::stoi(token); // MachineCount = TaskCount
+	std::cout << token <<std::endl;
+	bool tab = false;
+	unsigned long jobCount;
+	unsigned long machineCount; // MachineCount = TaskCount
+	std::cout << token;
+	for (int i=0; i < token.size(); i++)
+	{
+		if (token[i] == '\t'){ //first rule has tab
+			tab = true;
+		}
+	}
+
+	if(tab){
+		std::stringstream x(token);
+		std::string machine = "";
+		std::getline(x, machine, '	');
+		jobCount = std::stoi(machine);
+		std::getline(x, machine, '	');
+		machineCount = std::stoi(machine);
+	} else {
+		std::stringstream x(token);
+		std::string machine = "";
+		std::getline(x, machine, ' ');
+		jobCount = std::stoi(machine);
+		std::getline(x, machine, ' ');
+					machineCount = std::stoi(machine);
+	}
+//
+//	std::cout << "Machines: " << machineCount <<std::endl;
+//	std::cout << "Jobs: " << jobCount <<std::endl;
 
 	//create machines
 	//machineCount = 5;
@@ -48,7 +75,6 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 		unsigned long machine = 999;
 		unsigned long duration = 999;
 		while (ss >> word) { // Extract word from the stream.
-
 			if (machine == 999) {
 				machine = std::stoi(word);
 			} else {
