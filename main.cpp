@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
 		JobShop x(file, machines);
 		x.schedule();
 		x.sortById();
-		for(Job& j8: x.jobs){
-			std::cout << j8.id << ' ' << j8.start << ' ' << j8.end << std::endl;
+		for(Job& job: x.jobs){
+			std::cout << job.getId() << ' ' << job.getStart() << ' ' << job.getEnd() << std::endl;
 		}
 	}
 
