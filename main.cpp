@@ -12,67 +12,6 @@
 #include <fstream>
 #include <sstream>
 
-//Functie maakt een JobShop klasse van een bestand.
-JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
-	JobShop jobshop;
-
-	//Get amount of Jobs and Machines
-	std::string token;
-	std::getline(file, token);
-	bool tab = false;
-	unsigned long jobCount;
-	unsigned long machineCount; // MachineCount = TaskCount
-	for (unsigned long i = 0; i < token.size(); i++)
-	{
-		if (token[i] == '\t'){ //first rule has tab
-			tab = true;
-		}
-	}
-
-	std::stringstream x(token);
-	std::string machine = "";
-	std::getline(x, machine, (tab) ? '	' : ' ');
-	jobCount = std::stoi(machine);
-	std::getline(x, machine, '	');
-	machineCount = std::stoi(machine);
-
-	//create machines
-	for (unsigned long i = 0; i < machineCount; ++i) {
-		Machine m(i);
-		jobshop.machines.push_back(m);
-	}
-
-	//create jobs and tasks
-	for (unsigned long i = 0; i < jobCount; ++i) {
-		int TaskId = 0;
-		std::vector<Task> tasks;
-		std::getline(file, token);
-		std::vector<std::string> v;
-		std::stringstream ss(token);
-		std::string word;
-
-		Job xjob = Job(i);
-
-		unsigned long machine = 999;
-		unsigned long duration = 999;
-		while (ss >> word) { // Extract word from the stream.
-			if (machine == 999) {
-				machine = std::stoi(word);
-			} else {
-				duration = std::stoi(word);
-				Task xTask = Task(machine, duration);
-				TaskId++;
-				xjob.totalDurationOnStart += duration;
-				xjob.tasks.push(xTask);
-				machine = 999;
-				duration = 999;
-			}
-		}
-		jobshop.jobs.push_back(xjob);
-	}
-	return jobshop;
-}
-
 int main(int argc, char **argv) {
 	if (argc < 2) {
 		std::cout << "No path provided" << '\n';
@@ -82,7 +21,7 @@ int main(int argc, char **argv) {
 	std::ifstream file;
 	file.open(argv[argc - 1]);
 	if (file.is_open()) {
-		JobShop x = makeJobShop(file, machines);
+		JobShop x(file, machines);
 		x.schedule();
 		x.sortById();
 		for(Job& j8: x.jobs){

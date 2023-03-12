@@ -10,10 +10,11 @@
 #include "Job.h"
 #include "Machine.h"
 #include <vector>
+#include <fstream>
 
 class JobShop {
 public:
-	JobShop();
+	JobShop(std::ifstream &file, std::vector<Machine> &machines);
 	virtual ~JobShop();
 	void schedule();
 	bool done();
