@@ -6,7 +6,6 @@
  */
 
 #include "JobShop.h"
-
 #include <algorithm>
 #include <iostream>
 #include <sstream>
