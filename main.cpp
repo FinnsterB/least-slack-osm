@@ -5,7 +5,6 @@
  *      Author: finn
  */
 #include "JobShop.h"
-
 #include <vector>
 #include <utility>
 #include <iostream>
