@@ -11,34 +11,30 @@
 #include <iostream>
 
 JobShop::JobShop() {
-	// TODO Auto-generated constructor stub
-
+	// Auto-generated constructor stub
 }
 
 JobShop::~JobShop() {
-	// TODO Auto-generated destructor stub
+	// Auto-generated destructor stub
 }
 
 void JobShop::schedule() {
-	//variable to calculate critPath
-	unsigned long longestDur = 0;
-	//Variable to keep global time
 	unsigned long globTime = 0;
 
 	while (!done()) {
-
 		//calculate critPath
-		longestDur = 0;
-		for (Job &j : jobs) {
-			if (j.totalDurationOnStart > longestDur) {
-				longestDur = j.totalDurationOnStart;
-			}
-		}
+		auto longestDurationJob = std::max_element( jobs.begin(), jobs.end(),
+		[]( const Job &a, const Job &b )
+		{
+			return a.totalDurationOnStart < b.totalDurationOnStart;
+		});
+		unsigned long longestDur = longestDurationJob->totalDurationOnStart;
 
 		//calculate slack
-		for (Job &j : jobs) {
+		std::for_each(jobs.begin(),jobs.end(), [&](Job& j){
 			j.slack = longestDur - j.totalDurationOnStart;
-		}
+		});
+
 		//sort by slack
 		std::sort(jobs.begin(), jobs.end(), [](Job &j0, Job &j1) {
 			return j0.slack < j1.slack;
@@ -47,10 +43,9 @@ void JobShop::schedule() {
 		//use algorythm
 		for (Job &j : jobs) {
 			if (!j.tasks.empty()) {
-				//useful references
+				//get currenttask and currentmachine
 				Task &currentTask = j.tasks.front();
-				Machine &currentMachine = machines.at(
-						currentTask.machineNumber);
+				Machine &currentMachine = machines.at(currentTask.machineNumber);
 
 				//lambda that checks all preconditions
 				auto shouldDoTask = [*this, j, currentMachine]() {
@@ -87,11 +82,12 @@ void JobShop::schedule() {
 		//calculate shortest time left on a machine
 		unsigned long shortestTimeLeft = 0;
 		shortestTimeLeft--; //overflow value, for checkingin loop
-		for (Machine &m : machines) {
+
+		std::for_each(machines.begin(),machines.end(), [&](const Machine& m){
 			if ((m.currentTask.duration < shortestTimeLeft) && m.busy) {
 				shortestTimeLeft = m.currentTask.duration;
 			}
-		}
+		});
 
 		//update global time
 		globTime += shortestTimeLeft;
@@ -114,20 +110,17 @@ void JobShop::schedule() {
 			if (m.currentTask.duration <= 0) {
 				m.busy = false;
 				if (m.currentJobId != 99999999) {
-					if (currentJob->tasks.empty()
-							&& !currentJob->finished) {
+					if (currentJob->tasks.empty() && !currentJob->finished) {
 						currentJob->finished = true;
 						currentJob->end = globTime; //updates end time when the last task is FINISHED.
 					}
 				}
 			}
 		}
-
 	}
 }
 
 bool JobShop::done() {
-	auto ita = jobs.begin();
 	bool returnV = true;
 	std::for_each(jobs.begin(),jobs.end(), [&](const Job& s){
 		if(!s.finished) {

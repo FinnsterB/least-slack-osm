@@ -19,55 +19,36 @@ JobShop makeJobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	//Get amount of Jobs and Machines
 	std::string token;
 	std::getline(file, token);
-	std::cout << token <<std::endl;
 	bool tab = false;
 	unsigned long jobCount;
 	unsigned long machineCount; // MachineCount = TaskCount
-	std::cout << token;
-	for (int i=0; i < token.size(); i++)
+	for (unsigned long i = 0; i < token.size(); i++)
 	{
 		if (token[i] == '\t'){ //first rule has tab
 			tab = true;
 		}
 	}
 
-	if(tab){
-		std::stringstream x(token);
-		std::string machine = "";
-		std::getline(x, machine, '	');
-		jobCount = std::stoi(machine);
-		std::getline(x, machine, '	');
-		machineCount = std::stoi(machine);
-	} else {
-		std::stringstream x(token);
-		std::string machine = "";
-		std::getline(x, machine, ' ');
-		jobCount = std::stoi(machine);
-		std::getline(x, machine, ' ');
-					machineCount = std::stoi(machine);
-	}
-//
-//	std::cout << "Machines: " << machineCount <<std::endl;
-//	std::cout << "Jobs: " << jobCount <<std::endl;
+	std::stringstream x(token);
+	std::string machine = "";
+	std::getline(x, machine, (tab) ? '	' : ' ');
+	jobCount = std::stoi(machine);
+	std::getline(x, machine, '	');
+	machineCount = std::stoi(machine);
 
 	//create machines
-	//machineCount = 5;
 	for (unsigned long i = 0; i < machineCount; ++i) {
 		Machine m(i);
 		jobshop.machines.push_back(m);
 	}
 
-	//Loop door
-
+	//create jobs and tasks
 	for (unsigned long i = 0; i < jobCount; ++i) {
 		int TaskId = 0;
 		std::vector<Task> tasks;
 		std::getline(file, token);
-		//std::cout << token << std::endl;
 		std::vector<std::string> v;
-
 		std::stringstream ss(token);
-
 		std::string word;
 
 		Job xjob = Job(i);
