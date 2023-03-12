@@ -10,13 +10,35 @@
 #include "Task.h"
 
 class Machine {
-public:
-	Machine(unsigned long anId);
-	virtual ~Machine();
+private:
 	unsigned long id;
-	Task currentTask;
 	unsigned long currentJobId;
 	bool busy;
+public:
+	Task currentTask;
+
+	Machine(unsigned long anId);
+	virtual ~Machine();
+
+	unsigned long getCurrentJobId() const
+	{
+		return currentJobId;
+	}
+
+	void setCurrentJobId(unsigned long currentJobId)
+	{
+		this->currentJobId = currentJobId;
+	}
+
+	bool isBusy() const
+	{
+		return busy;
+	}
+
+	void setBusy(bool busy)
+	{
+		this->busy = busy;
+	}
 };
 
 #endif /* MACHINE_H_ */

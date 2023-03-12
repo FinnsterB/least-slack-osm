@@ -103,13 +103,13 @@ void JobShop::schedule() {
 
 				//lambda that checks all preconditions
 				auto shouldDoTask = [*this, j, currentMachine]() {
-					if (currentMachine.busy) { //if currentmachine busy, not schedulable
+					if (currentMachine.isBusy()) { //if currentmachine busy, not schedulable
 						return false;
 					}
 					//if job is still running, then tasks before this tasks are still running so this task cant run
 					for (Machine m : machines) {
-						if ((m.currentJobId == j.getId())) {
-							if (m.busy) {
+						if ((m.getCurrentJobId() == j.getId())) {
+							if (m.isBusy()) {
 								return false;
 							}
 						}
@@ -122,8 +122,8 @@ void JobShop::schedule() {
 				if (shouldDoTask()) {
 					//set currenttask on currentmachine
 					currentMachine.currentTask = currentTask;
-					currentMachine.busy = true;
-					currentMachine.currentJobId = j.getId();
+					currentMachine.setBusy(true);
+					currentMachine.setCurrentJobId(j.getId());
 					//registers start time only when the first task is planned
 					if (!j.isStarted()) {
 						j.setStart(globTime);
@@ -138,7 +138,7 @@ void JobShop::schedule() {
 		unsigned long shortestTimeLeft = 0;
 		shortestTimeLeft--; //overflow value, for checkingin loop
 		std::for_each(machines.begin(),machines.end(), [&](const Machine& m){
-			if ((m.currentTask.duration < shortestTimeLeft) && m.busy) {
+			if ((m.currentTask.duration < shortestTimeLeft) && m.isBusy()) {
 				shortestTimeLeft = m.currentTask.duration;
 			}
 		});
@@ -151,10 +151,10 @@ void JobShop::schedule() {
 			//get job that is scheduled/running on current machine
 			auto currentJob = std::find_if(this->jobs.begin(), this->jobs.end(),
 					[&m](Job &j) {
-						return j.getId() == m.currentJobId;
+						return j.getId() == m.getCurrentJobId();
 					});
 			//if machine is busy, update duration left, if not possible, scheduling is not possible of given input
-			if (m.busy) {
+			if (m.isBusy()) {
 				m.currentTask.duration -= shortestTimeLeft;
 				if (currentJob->getTotalDurationOnStart() >= shortestTimeLeft) {
 					currentJob->setTotalDurationOnStart(currentJob->getTotalDurationOnStart() - shortestTimeLeft);
@@ -165,9 +165,9 @@ void JobShop::schedule() {
 			}
 			//if duration of currenttask on machine is 0, machine is not busy anymore
 			if (m.currentTask.duration <= 0) {
-				m.busy = false;
+				m.setBusy(false);
 				//if currentjobid is a valid id
-				if (m.currentJobId != 99999999) {
+				if (m.getCurrentJobId() != 99999999) {
 					//update job endtime if last task if finished, and label as finished
 					if (currentJob->getTasks().empty() && !currentJob->isFinished()) {
 						currentJob->setFinished(true);
