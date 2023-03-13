@@ -15,3 +15,82 @@ Job::~Job() {
 	// TODO Auto-generated destructor stub
 }
 
+unsigned long Job::getEnd() const
+{
+	return end;
+}
+
+void Job::setEnd(unsigned long end)
+{
+	this->end = end;
+}
+
+bool Job::isFinished() const
+{
+	return finished;
+}
+
+void Job::setFinished(bool finished)
+{
+	this->finished = finished;
+}
+
+unsigned long Job::getId() const
+{
+	return id;
+}
+
+void Job::setId(unsigned long id)
+{
+	this->id = id;
+}
+
+unsigned long Job::getSlack() const
+{
+	return slack;
+}
+
+void Job::setSlack(unsigned long slack)
+{
+	this->slack = slack;
+}
+
+unsigned long Job::getStart() const
+{
+	return start;
+}
+
+void Job::setStart(unsigned long start)
+{
+	this->start = start;
+}
+
+bool Job::isStarted() const
+{
+	return started;
+}
+
+void Job::setStarted(bool started)
+{
+	this->started = started;
+}
+
+std::queue<Task>& Job::getTasks()
+{
+	return tasks;
+}
+
+void Job::setTasks(const std::queue<Task> &tasks)
+{
+	this->tasks = tasks;
+}
+
+unsigned long Job::getTotalDurationOnStart() const
+{
+	return totalDurationOnStart;
+}
+
+void Job::setTotalDurationOnStart(unsigned long totalDurationOnStart)
+{
+	this->totalDurationOnStart = totalDurationOnStart;
+}

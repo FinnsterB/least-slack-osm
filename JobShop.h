@@ -13,14 +13,17 @@
 #include <fstream>
 
 class JobShop {
+private:
+	std::vector<Job> jobs;
+	std::vector<Machine> machines;
 public:
 	JobShop(std::ifstream &file, std::vector<Machine> &machines);
 	virtual ~JobShop();
 	void schedule();
 	bool done();
 	void sortById();
-	std::vector<Job> jobs;
-	std::vector<Machine> machines;
+
+	std::vector<Job> getJobs();
 };
 
 #endif /* JOBSHOP_H_ */

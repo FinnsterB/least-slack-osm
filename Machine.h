@@ -14,31 +14,18 @@ private:
 	unsigned long id;
 	unsigned long currentJobId;
 	bool busy;
-public:
 	Task currentTask;
 
+public:
 	Machine(unsigned long anId);
 	virtual ~Machine();
 
-	unsigned long getCurrentJobId() const
-	{
-		return currentJobId;
-	}
-
-	void setCurrentJobId(unsigned long currentJobId)
-	{
-		this->currentJobId = currentJobId;
-	}
-
-	bool isBusy() const
-	{
-		return busy;
-	}
-
-	void setBusy(bool busy)
-	{
-		this->busy = busy;
-	}
+	unsigned long getCurrentJobId() const;
+	void setCurrentJobId(unsigned long currentJobId);
+	bool isBusy() const;
+	void setBusy(bool busy);
+	Task* getCurrentTask();
+	void setCurrentTask(Task& t);
 };
 
 #endif /* MACHINE_H_ */

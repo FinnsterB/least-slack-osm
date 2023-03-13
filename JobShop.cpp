@@ -121,7 +121,7 @@ void JobShop::schedule() {
 				//checks with lambda if task should be planned
 				if (shouldDoTask()) {
 					//set currenttask on currentmachine
-					currentMachine.currentTask = currentTask;
+					currentMachine.setCurrentTask(currentTask);
 					currentMachine.setBusy(true);
 					currentMachine.setCurrentJobId(j.getId());
 					//registers start time only when the first task is planned
@@ -137,9 +137,9 @@ void JobShop::schedule() {
 		//calculate shortest time left on a machine
 		unsigned long shortestTimeLeft = 0;
 		shortestTimeLeft--; //overflow value, for checkingin loop
-		std::for_each(machines.begin(),machines.end(), [&](const Machine& m){
-			if ((m.currentTask.duration < shortestTimeLeft) && m.isBusy()) {
-				shortestTimeLeft = m.currentTask.duration;
+		std::for_each(machines.begin(),machines.end(), [&](Machine& m){
+			if ((m.getCurrentTask()->duration < shortestTimeLeft) && m.isBusy()) {
+				shortestTimeLeft = m.getCurrentTask()->duration;
 			}
 		});
 
@@ -155,7 +155,7 @@ void JobShop::schedule() {
 					});
 			//if machine is busy, update duration left, if not possible, scheduling is not possible of given input
 			if (m.isBusy()) {
-				m.currentTask.duration -= shortestTimeLeft;
+				m.getCurrentTask()->duration -= shortestTimeLeft;
 				if (currentJob->getTotalDurationOnStart() >= shortestTimeLeft) {
 					currentJob->setTotalDurationOnStart(currentJob->getTotalDurationOnStart() - shortestTimeLeft);
 				} else {
@@ -164,7 +164,7 @@ void JobShop::schedule() {
 				}
 			}
 			//if duration of currenttask on machine is 0, machine is not busy anymore
-			if (m.currentTask.duration <= 0) {
+			if (m.getCurrentTask()->duration <= 0) {
 				m.setBusy(false);
 				//if currentjobid is a valid id
 				if (m.getCurrentJobId() != 99999999) {
@@ -195,4 +195,8 @@ void JobShop::sortById() {
 	std::sort(jobs.begin(), jobs.end(), [](Job &j1, Job &j2) {
 		return j1.getId() < j2.getId();
 	});
+}
+
+std::vector<Job> JobShop::getJobs(){
+	return this->jobs;
 }
