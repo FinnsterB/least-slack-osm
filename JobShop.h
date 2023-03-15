@@ -18,7 +18,7 @@ private:
 	std::vector<Machine> machines;
 public:
 	JobShop(std::ifstream &file, std::vector<Machine> &machines);
-	virtual ~JobShop();
+	virtual ~JobShop() = default;
 	void schedule();
 	bool done();
 	void sortById();

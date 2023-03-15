@@ -40,11 +40,6 @@ unsigned long Job::getId() const
 	return id;
 }
 
-void Job::setId(unsigned long id)
-{
-	this->id = id;
-}
-
 unsigned long Job::getSlack() const
 {
 	return slack;

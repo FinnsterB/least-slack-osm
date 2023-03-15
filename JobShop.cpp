@@ -67,10 +67,6 @@ JobShop::JobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	}
 }
 
-JobShop::~JobShop() {
-	// Auto-generated destructor stub
-}
-
 void JobShop::schedule() {
 	//keep track of global timing. used for start and endtimes of jobs.
 	unsigned long globTime = 0;

@@ -18,7 +18,7 @@ private:
 
 public:
 	Machine(unsigned long anId);
-	virtual ~Machine();
+	virtual ~Machine() = default;
 
 	unsigned long getCurrentJobId() const;
 	void setCurrentJobId(unsigned long currentJobId);

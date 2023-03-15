@@ -29,7 +29,6 @@ public:
 	bool isFinished() const;
 	void setFinished(bool finished);
 	unsigned long getId() const;
-	void setId(unsigned long id);
 	unsigned long getSlack() const;
 	void setSlack(unsigned long slack);
 	unsigned long getStart() const;

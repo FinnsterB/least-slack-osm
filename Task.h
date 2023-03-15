@@ -10,9 +10,8 @@
 
 class Task {
 public:
-	Task();
-	Task(unsigned long machineNumber, unsigned long duration);
-	virtual ~Task();
+	Task(unsigned long machineNumber = 0, unsigned long duration = 0);
+	virtual ~Task() = default;
 	unsigned long machineNumber;
 	unsigned long duration;
 };
