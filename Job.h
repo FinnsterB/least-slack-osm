@@ -16,6 +16,7 @@ private:
 	unsigned long id;
 	unsigned long slack;
 	unsigned long totalDurationOnStart;
+	unsigned long timeNotPossible;
 	bool started;
 	bool finished;
 	unsigned long start;
@@ -105,6 +106,11 @@ public:
 	* @brief sets totalDuration of all tasks in job.
 	*/
 	void setTotalDurationOnStart(unsigned long totalDurationOnStart);
+
+	void setWantToStartTime(unsigned long time);
+	void resetTimeNotPossible();
+	void addDuration(unsigned long time);
+	unsigned long getWantToStartTime();
 };
 
 #endif /* JOB_H_ */

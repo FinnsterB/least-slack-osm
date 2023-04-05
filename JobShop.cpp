@@ -96,26 +96,41 @@ void JobShop::schedule() {
 				//get currenttask and currentmachine
 				Task &currentTask = j.getTasks().front();
 				Machine &currentMachine = machines.at(currentTask.machineNumber);
+				int id = currentMachine.getId();
 
 				//lambda that checks all preconditions
-				auto shouldDoTask = [*this, j, currentMachine]() {
-					if (currentMachine.isBusy()) { //if currentmachine busy, not schedulable
-						return false;
-					}
+				auto shouldDoTask = [*this, &j, id, currentMachine, globTime]() {
 					//if job is still running, then tasks before this tasks are still running so this task cant run
 					for (Machine m : machines) {
 						if ((m.getCurrentJobId() == j.getId())) {
 							if (m.isBusy()) {
+								int id2 = m.getId();
+								if(j.getWantToStartTime() == 0 && id2 == id){ //if current machine is running and current machine id is task machine id
+									j.setWantToStartTime(globTime);
+								}
 								return false;
 							}
 						}
 					}
-					//if macine is free and task before selected tasks are done, task is schedulable
+					if (currentMachine.isBusy()) { //if currentmachine busy, not schedulable
+//						if(j.getWantToStartTime() == 0){ //if current machine is running and current machine id is task machine id
+//							j.setWantToStartTime(globTime);
+//						}
+						return false;
+					}
 					return true;
 				};
 
 				//checks with lambda if task should be planned
 				if (shouldDoTask()) {
+
+					if(j.getWantToStartTime() != 0) {
+						unsigned long addToDuration = globTime - j.getWantToStartTime();
+						std::cout << "addToDuration: " << addToDuration << std::endl;
+						j.addDuration(addToDuration);
+						j.setWantToStartTime(0);
+					}
+
 					//set currenttask on currentmachine
 					currentMachine.setCurrentTask(currentTask);
 					currentMachine.setBusy(true);
@@ -167,7 +182,9 @@ void JobShop::schedule() {
 					//update job endtime if last task if finished, and label as finished
 					if (currentJob->getTasks().empty() && !currentJob->isFinished()) {
 						currentJob->setFinished(true);
-						currentJob->setEnd(globTime);
+						//currentJob->setEnd(globTime);
+						currentJob->setEnd(globTime + currentJob->getWantToStartTime());
+						//currentJob->setEnd(currentJob->getStart() + currentJob->getTotalDurationOnStart() + currentJob->getTimeNotPossible());
 					}
 				}
 			}

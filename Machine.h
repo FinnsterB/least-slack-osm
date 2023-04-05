@@ -51,6 +51,10 @@ public:
 	* @brief sets current running task to this machine.
 	*/
 	void setCurrentTask(Task& t);
+
+	unsigned long getId(){
+		return id;
+	}
 };
 
 #endif /* MACHINE_H_ */

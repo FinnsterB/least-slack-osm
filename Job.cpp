@@ -7,7 +7,7 @@
 
 #include "Job.h"
 
-Job::Job(unsigned long anId):id(anId), slack(0), totalDurationOnStart(0), started(false), finished(false), start(0), end(0) {
+Job::Job(unsigned long anId):id(anId), slack(0), totalDurationOnStart(0), started(false), finished(false), start(0), end(0), timeNotPossible(0) {
 	// TODO Auto-generated constructor stub
 }
 
@@ -89,3 +89,20 @@ void Job::setTotalDurationOnStart(unsigned long totalDurationOnStart)
 {
 	this->totalDurationOnStart = totalDurationOnStart;
 }
+
+unsigned long Job::getWantToStartTime() {
+	return this->timeNotPossible;
+}
+
+void Job::resetTimeNotPossible() {
+	this->timeNotPossible = 0;
+}
+
+void Job::setWantToStartTime(unsigned long time) {
+	this->timeNotPossible = time;
+}
+
+void Job::addDuration(unsigned long time) {
+	this->totalDurationOnStart += time;
+}
+
