@@ -19,10 +19,25 @@ private:
 public:
 	JobShop(std::ifstream &file, std::vector<Machine> &machines);
 	virtual ~JobShop() = default;
+	/**
+	* schedule()
+	* @brief schedules jobs and tasks currently available in JobShop
+	*/
 	void schedule();
+	/**
+	* done()
+	* @brief returns true if every job is done, otherwise returns false.
+	*/
 	bool done();
+	/**
+	* sortById()
+	* @brief sorts current jobs in jobshop on jobid's.
+	*/
 	void sortById();
-
+	/**
+	* getJobs()
+	* @brief returns all jobs in jobshop.
+	*/
 	std::vector<Job> getJobs();
 };
 
