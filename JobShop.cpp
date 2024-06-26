@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 JobShop::JobShop(std::ifstream &file, std::vector<Machine> &machines) {
 	//Get amount of Jobs and Machines
@@ -68,112 +69,99 @@ JobShop::JobShop(std::ifstream &file, std::vector<Machine> &machines) {
 }
 
 void JobShop::schedule() {
-	//keep track of global timing. used for start and endtimes of jobs.
-	unsigned long globTime = 0;
+    unsigned long globTime = 0;
 
-	while (!done()) {
-		//calculate critPath
-		auto longestDurationJob = std::max_element( jobs.begin(), jobs.end(),
-		[]( const Job &a, const Job &b )
-		{
-			return a.getTotalDurationOnStart() < b.getTotalDurationOnStart();
-		});
-		unsigned long longestDur = longestDurationJob->getTotalDurationOnStart();
+    while (!done()) {
+        // Calculate critical path
+        auto longestDurationJob = std::max_element(jobs.begin(), jobs.end(),
+        [](const Job &a, const Job &b) {
+            return a.getTotalDurationOnStart() < b.getTotalDurationOnStart();
+        });
+        unsigned long longestDur = longestDurationJob->getTotalDurationOnStart();
 
-		//calculate slack
-		std::for_each(jobs.begin(),jobs.end(), [&](Job& j){
-			j.setSlack(longestDur - j.getTotalDurationOnStart());
-		});
+        // Calculate slack
+        std::for_each(jobs.begin(), jobs.end(), [&](Job &j) {
+            j.setSlack(longestDur - j.getTotalDurationOnStart());
+        });
 
-		//sort by slack
-		std::sort(jobs.begin(), jobs.end(), [](Job &j0, Job &j1) {
-			return j0.getSlack() < j1.getSlack();
-		});
+        // Sort jobs by slack
+        std::sort(jobs.begin(), jobs.end(), [](Job &j0, Job &j1) {
+            return j0.getSlack() < j1.getSlack();
+        });
 
-		//use algorythm
-		for (Job &j : jobs) {
-			if (!j.getTasks().empty()) {
-				//get currenttask and currentmachine
-				Task &currentTask = j.getTasks().front();
-				Machine &currentMachine = machines.at(currentTask.machineNumber);
+        // Use algorithm to schedule tasks
+        for (Job &j : jobs) {
+            if (!j.getTasks().empty()) {
+                Task &currentTask = j.getTasks().front();
+                Machine &currentMachine = machines.at(currentTask.machineNumber);
 
-				//lambda that checks all preconditions
-				auto shouldDoTask = [*this, j, currentMachine]() {
-					if (currentMachine.isBusy()) { //if currentmachine busy, not schedulable
-						return false;
-					}
-					//if job is still running, then tasks before this tasks are still running so this task cant run
-					for (Machine m : machines) {
-						if ((m.getCurrentJobId() == j.getId())) {
-							if (m.isBusy()) {
-								return false;
-							}
-						}
-					}
-					//if macine is free and task before selected tasks are done, task is schedulable
-					return true;
-				};
+                auto shouldDoTask = [&]() {
+                    if (currentMachine.isBusy()) return false;
+                    for (Machine &m : machines) {
+                        if (m.getCurrentJobId() == j.getId() && m.isBusy()) return false;
+                    }
+                    return true;
+                };
 
-				//checks with lambda if task should be planned
-				if (shouldDoTask()) {
-					//set currenttask on currentmachine
-					currentMachine.setCurrentTask(currentTask);
-					currentMachine.setBusy(true);
-					currentMachine.setCurrentJobId(j.getId());
-					//registers start time only when the first task is planned
-					if (!j.isStarted()) {
-						j.setStart(globTime);
-						j.setStarted(true);
-					}
-					(j.getTasks()).pop(); //pops task from queue when planned
-				}
-			}
-		}
+                if (shouldDoTask()) {
+                    currentMachine.setCurrentTask(currentTask);
+                    currentMachine.setBusy(true);
+                    currentMachine.setCurrentJobId(j.getId());
+                    if (!j.isStarted()) {
+                        j.setStart(globTime);
+                        j.setStarted(true);
+                    }
+                    j.getTasks().pop();
+                }
+            }
+        }
 
-		//calculate shortest time left on a machine
-		unsigned long shortestTimeLeft = 0;
-		shortestTimeLeft--; //overflow value, for checkingin loop
-		std::for_each(machines.begin(),machines.end(), [&](Machine& m){
-			if ((m.getCurrentTask()->duration < shortestTimeLeft) && m.isBusy()) {
-				shortestTimeLeft = m.getCurrentTask()->duration;
-			}
-		});
+        // Calculate shortest time left on a machine
+        unsigned long shortestTimeLeft = std::numeric_limits<unsigned long>::max();
+        for (Machine &m : machines) {
+            if (m.isBusy() && m.getCurrentTask()->duration < shortestTimeLeft) {
+                shortestTimeLeft = m.getCurrentTask()->duration;
+            }
+        }
 
-		//update global time
-		globTime += shortestTimeLeft;
+        if (shortestTimeLeft == std::numeric_limits<unsigned long>::max()) {
+            break; // No tasks are running, should not happen if while(!done()) is correct
+        }
 
-		//update duration on machines
-		for (Machine &m : machines) {
-			//get job that is scheduled/running on current machine
-			auto currentJob = std::find_if(this->jobs.begin(), this->jobs.end(),
-					[&m](Job &j) {
-						return j.getId() == m.getCurrentJobId();
-					});
-			//if machine is busy, update duration left, if not possible, scheduling is not possible of given input
-			if (m.isBusy()) {
-				m.getCurrentTask()->duration -= shortestTimeLeft;
-				if (currentJob->getTotalDurationOnStart() >= shortestTimeLeft) {
-					currentJob->setTotalDurationOnStart(currentJob->getTotalDurationOnStart() - shortestTimeLeft);
-				} else {
-					std::cout << "ERROR, TASK TAKES TOO LONG" << std::endl;
-					abort();
-				}
-			}
-			//if duration of currenttask on machine is 0, machine is not busy anymore
-			if (m.getCurrentTask()->duration <= 0) {
-				m.setBusy(false);
-				//if currentjobid is a valid id
-				if (m.getCurrentJobId() != 99999999) {
-					//update job endtime if last task if finished, and label as finished
-					if (currentJob->getTasks().empty() && !currentJob->isFinished()) {
-						currentJob->setFinished(true);
-						currentJob->setEnd(globTime);
-					}
-				}
-			}
-		}
-	}
+        // Update global time
+        globTime += shortestTimeLeft;
+
+        // Update durations on machines
+        for (Machine &m : machines) {
+            if (m.isBusy()) {
+                Task *currentTask = m.getCurrentTask();
+                currentTask->duration -= shortestTimeLeft;
+
+                auto currentJob = std::find_if(jobs.begin(), jobs.end(), [&](Job &j) {
+                    return j.getId() == m.getCurrentJobId();
+                });
+
+                if (currentJob != jobs.end()) {
+                    if (currentJob->getTotalDurationOnStart() >= shortestTimeLeft) {
+                        currentJob->setTotalDurationOnStart(currentJob->getTotalDurationOnStart() - shortestTimeLeft);
+                    } else {
+                        std::cout << "ERROR, TASK TAKES TOO LONG" << std::endl;
+                        abort();
+                    }
+
+                    if (currentTask->duration <= 0) {
+                        m.setBusy(false);
+                        if (currentJob->getTasks().empty() && !currentJob->isFinished()) {
+                            currentJob->setFinished(true);
+                            currentJob->setEnd(globTime);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 bool JobShop::done() {
 	//working with return value because otherwise we return only out of the for loop
