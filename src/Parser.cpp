@@ -17,7 +17,8 @@ JobShop& Parser::parse(std::string filePath) {
 	JobShop* js = new JobShop();
     std::ifstream file(filePath); // Open the file
     if (!file) { // Check if the file was successfully opened
-        std::cerr << "Unable to open file " << filePath;
+        std::cerr << "Unable to open file: \"" << filePath << "\"" << std::endl;
+		exit(1);
         JobShop* empty = new JobShop();
         return *empty; // Return an error code
     }
