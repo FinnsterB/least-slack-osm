@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <climits>
 #include "JobShop.h"
 #include "Machine.h"
 #include "Job.h"

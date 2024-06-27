@@ -1,0 +1,3 @@
+cmake_minimum_required(VERSION 3.5)
+project( LeastSlack )
+add_executable( leastSlack src/LeastSlack.cpp src/Job.cpp src/JobShop.cpp src/Machine.cpp src/Task.cpp src/Parser.cpp)
