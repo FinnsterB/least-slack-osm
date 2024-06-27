@@ -8,21 +8,23 @@
 #include "Parser.h"
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
     // Working with that input
     Parser p = Parser();
-    std::string filename = "input.txt";
+    if(argc < 2){
+        std::cerr << "No file provided. " << std::endl;
+        return 1;
+    }
+    std::string filename = argv[1];
     JobShop js = p.parse(filename);
 
     std::vector<Machine> machines;
-    std::cout << "Amount machines from parser: " << p.getAmountMachines() << std::endl;
     for (unsigned short i = 0; i < p.getAmountMachines(); i++) {
         machines.push_back(Machine());
     }
 
     // 1) Get job with longest duration
     Job longest_job = js.getLongestJob();
-    std::cout << "Longest job duration: " << longest_job.getDuration() << std::endl;
 
     // 2) Calculate slack for every job
     for (Job& j : js.jobs) {
@@ -111,7 +113,6 @@ int main() {
         return a.getId() < b.getId();
     });
 
-    std::cout << "---------- OUTPUT -------------" << std::endl;
     for (Job &j : js.jobs) {
         std::cout << j.getId() << " " << j.getStartTime() << " " << (j.getStopTime()) << std::endl;
     }
