@@ -1,1 +1,10 @@
-/Debug/
+build/leastSlack
+build/Makefile
+build/.cmake
+build/CMakeFiles
+.vscode/c_cpp_properties.json
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/compile_commands.json
+Debug/src
+Debug/LeastSlack.exe
