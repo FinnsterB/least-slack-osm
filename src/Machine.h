@@ -12,7 +12,7 @@ class Machine {
 private:
 	unsigned long busyUntil = 0;
 public:
-	Machine();
+	Machine() = default;
 	unsigned long getBusyUntil();
 	void setBusyUntil(unsigned long time);
 	virtual ~Machine() = default;

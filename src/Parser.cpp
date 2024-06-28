@@ -28,14 +28,14 @@ JobShop& Parser::parse(std::string filePath) {
     while (std::getline(file, line)) { // Read file line by line
     	if(lineNr == 0) {
     		//first is jobs // second is machines
-    		std::vector<std::string> words = this->splitOnSpace(line);
-    		this->amountJobs = std::stoi(words.at(0));
-    		this->amountMachines = std::stoi(words.at(1));
+    		std::vector<std::string> words = splitOnSpace(line);
+    		amountJobs = std::stoi(words.at(0));
+    		amountMachines = std::stoi(words.at(1));
     	}
     	else {
     		Job j;
     		j.setId(lineNr-1);
-    		std::vector<std::string> words = this->splitOnSpace(line);
+    		std::vector<std::string> words = splitOnSpace(line);
     		int i = 0;
     		std::string id = "";
     		std::string duration = "";
@@ -72,5 +72,5 @@ std::vector<std::string> Parser::splitOnSpace(std::string text) {
 }
 
 unsigned long Parser::getAmountMachines() {
-	return this->amountMachines;
+	return amountMachines;
 }

@@ -7,15 +7,10 @@
 
 #include "Machine.h"
 
-Machine::Machine() {
-	// TODO Auto-generated constructor stub
-
-}
-
 unsigned long Machine::getBusyUntil() {
-	return this->busyUntil;
+	return busyUntil;
 }
 
 void Machine::setBusyUntil(unsigned long time) {
-	this->busyUntil = time;
+	busyUntil = time;
 }

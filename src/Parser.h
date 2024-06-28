@@ -11,8 +11,8 @@
 #include <string>
 class Parser {
 private:
-	unsigned short amountJobs = 0;
-	unsigned short amountMachines = 0;
+	unsigned long amountJobs = 0;
+	unsigned long amountMachines = 0;
 public:
 	Parser();
 	JobShop& parse(std::string text);

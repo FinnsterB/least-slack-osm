@@ -8,6 +8,8 @@
 #ifndef JOB_H_
 #define JOB_H_
 #include <vector>
+#include <optional>
+#include <functional>
 #include "Task.h"
 
 class Job {
@@ -30,7 +32,7 @@ public:
 	unsigned long getRemainingDuration();
 	unsigned long getDuration();
 	unsigned long getSlack();
-	Task& getSchedulableTask();
+	std::optional<std::reference_wrapper<Task>>  getSchedulableTask();
 	bool isDone();
 	bool startTimeSet();
 	void setStartTime(unsigned long starttime);

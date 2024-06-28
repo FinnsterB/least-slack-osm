@@ -12,21 +12,21 @@ Task::Task(unsigned long machine, unsigned long duration, unsigned long jobNr):m
 }
 
 unsigned long Task::getMachineNr() {
-	return this->machine;
+	return machine;
 }
 
 void Task::setScheduled() {
-	this->scheduled = true;
+	scheduled = true;
 }
 
 unsigned long Task::getDuration() {
-	return this->duration;
+	return duration;
 }
 
 bool Task::isScheduled(){
-	return this->scheduled;
+	return scheduled;
 }
 
 unsigned long Task::getJobNr(){
-	return this->jobNr;
+	return jobNr;
 }

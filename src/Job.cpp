@@ -22,7 +22,7 @@ unsigned long Job::getDuration(){
 }
 
 bool Job::isDone(){
-	unsigned long duration = this->getRemainingDuration();
+	unsigned long duration = getRemainingDuration();
 	if(duration == 0) {
 		return true;
 	}
@@ -30,26 +30,29 @@ bool Job::isDone(){
 }
 
 void Job::runsUntil(unsigned long time) {
-	this->runs_until = time;
+	runs_until = time;
 }
 
 bool Job::hasTaskRunning(unsigned long time){
-	if(this->runs_until > time) {
+	if(runs_until > time) {
 		return true;
 	}
 	return false;
 }
 
-Task& Job::getSchedulableTask() {
-	for(Task& t : this->tasks) {
+std::optional<std::reference_wrapper<Task>> Job::getSchedulableTask() {
+	std::optional<std::reference_wrapper<Task>> foundTask;
+	for(Task& t : tasks) {
 		if(t.isScheduled() == false) {
-			return t;
+			foundTask.emplace(std::reference_wrapper<Task>(t));
+			return foundTask;
 		}
 	}
+	return foundTask;
 }
 
 bool Job::allTasksPlanned(){
-	for(Task& t : this->tasks) {
+	for(Task& t : tasks) {
 		if(t.isScheduled() == false) {
 			return false;
 		}
@@ -58,19 +61,18 @@ bool Job::allTasksPlanned(){
 }
 
 void Job::addTask(Task task) {
-	this->tasks.push_back(task);
+	tasks.push_back(task);
 }
 
 unsigned long Job::calcSlack(unsigned long currentTime, unsigned long maxFinishTime) {
     // Calculate the slack as the difference between the latest finish time and the current time plus remaining job duration
-    this->slack = maxFinishTime - (currentTime + this->getRemainingDuration());
-    return this->slack;
+    slack = maxFinishTime - (currentTime + getRemainingDuration());
+    return slack;
 }
 
 unsigned long Job::getRemainingDuration() {
     unsigned long remainingDuration = 0;
     for (Task& task : tasks) {
-    	//if (!task.isDone()) {
     	if (!task.isScheduled()) {
             remainingDuration += task.getDuration();
         }
@@ -79,32 +81,32 @@ unsigned long Job::getRemainingDuration() {
 }
 
 unsigned long Job::getSlack() {
-	return this->slack;
+	return slack;
 }
 
-void Job::setStartTime(unsigned long startTime){
-	this->startTime = startTime;
-	this->isStartTimeSet = true;
+void Job::setStartTime(unsigned long aStartTime){
+	startTime = aStartTime;
+	isStartTimeSet = true;
 }
 
 bool Job::startTimeSet() {
-	return this->isStartTimeSet;
+	return isStartTimeSet;
 }
 
 unsigned long Job::getStartTime(){
-	return this->startTime;
+	return startTime;
 }
 
-void Job::setStopTime(unsigned long stopTime) {
-	this->stopTime = stopTime;
+void Job::setStopTime(unsigned long aStopTime) {
+	stopTime = aStopTime;
 }
 
 unsigned long Job::getStopTime() {
-	return this->stopTime;
+	return stopTime;
 }
 
-void Job::setId(unsigned long id) {
-	this->id = id;
+void Job::setId(unsigned long aId) {
+	id = aId;
 }
 
 unsigned long Job::getId() {

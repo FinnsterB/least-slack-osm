@@ -12,8 +12,8 @@ class Task {
 private:
 	unsigned long machine;
 	unsigned long duration;
-	unsigned long jobNr;
 	bool scheduled;
+	unsigned long jobNr;
 public:
 	Task() = delete;
 	Task(unsigned long machine, unsigned long duration, unsigned long jobNr);
