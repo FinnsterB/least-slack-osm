@@ -6,3 +6,5 @@ build/CMakeFiles
 build/cmake_install.cmake
 build/CMakeCache.txt
 build/compile_commands.json
+Debug/src
+Debug/LeastSlack.exe
