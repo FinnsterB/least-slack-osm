@@ -13,7 +13,7 @@ Parser::Parser() {
 	// TODO Auto-generated constructor stub
 }
 
-JobShop& Parser::parse(std::string filePath) {
+std::optional<JobShop> Parser::parse(std::string& filePath) {
 	JobShop* js = new JobShop();
     std::ifstream file(filePath); // Open the file
     if (!file) { // Check if the file was successfully opened
@@ -60,7 +60,7 @@ JobShop& Parser::parse(std::string filePath) {
     return *js;
 }
 
-std::vector<std::string> Parser::splitOnSpace(std::string text) {
+std::vector<std::string> Parser::splitOnSpace(std::string& text) {
     std::istringstream iss(text);
     std::vector<std::string> words;
     std::string word;

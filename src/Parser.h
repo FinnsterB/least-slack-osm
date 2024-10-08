@@ -15,8 +15,8 @@ private:
 	unsigned long amountMachines = 0;
 public:
 	Parser();
-	JobShop& parse(std::string text);
-	std::vector<std::string> splitOnSpace(std::string text);
+	std::optional<JobShop> parse(std::string& text);
+	std::vector<std::string> splitOnSpace(std::string& text);
 	unsigned long getAmountMachines();
 	virtual ~Parser() = default;
 };

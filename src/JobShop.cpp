@@ -12,26 +12,27 @@
 #include <iostream>
 #include <climits>
 
-void JobShop::addJob(Job j) {
+
+void JobShop::addJob(const Job& j) {
 	jobs.push_back(j);
 }
 
-Job& JobShop::getLongestJob() {
+std::optional<Job> JobShop::getLongestJob() {
     unsigned long longestDuration = 0;
-    Job* longestJob = nullptr;
+    std::optional<Job> longestJob;
     for(Job& j : jobs) {
         unsigned long duration = j.getDuration();
         if(duration > longestDuration) {
             longestDuration = duration;
-            longestJob = &j; // Assign the address of j to longestJob
+            longestJob.emplace(j); // Assign the address of j to longestJob
         }
     }
-    return *longestJob; // Dereference longestJob to return a Job&
+    return longestJob; // Optional pointer to the longest job.
 }
 
 bool JobShop::everyTaskDone() {
-	for(Job j : jobs) {
-		for(Task t : j.tasks) {
+	for(Job& j : jobs) {
+		for(Task& t : j.getTasks()) {
 			if(t.isScheduled() == false) {
 				return false;
 			}
@@ -40,14 +41,37 @@ bool JobShop::everyTaskDone() {
 	return true;
 }
 
+bool JobShop::run(const unsigned long amountOfMachines)
+{
+    
+    bool succes = false;
+    for (unsigned short i = 0; i < amountOfMachines; i++) {
+        machines.push_back(Machine());
+    }
+
+    succes = schedule();
+
+    // Output: sort on job id
+    std::sort(jobs.begin(), jobs.end(), [](Job& a, Job& b) -> bool {
+        return a.getId() < b.getId();
+    });
+
+    for (Job &j : jobs) {
+        std::cout << j.getId() << " " << j.getStartTime() << " " << (j.getStopTime()) << std::endl;
+    }
+
+    return succes;
+}
+
 bool JobShop::schedule()
 {
     // 1) Get job with longest duration
-    Job longest_job = getLongestJob();
+    std::optional<Job> optLongestJob = getLongestJob();
+    Job longestJob = optLongestJob.has_value() ? optLongestJob.value() : Job();
 
     // 2) Calculate slack for every job
     for (Job& j : jobs) {
-        j.calcSlack(0, longest_job.getDuration());
+        j.calcSlack(0, longestJob.getDuration());
     }
     // 3) Sort jobs on slack
     std::sort(jobs.begin(), jobs.end(), [](Job& job1, Job& job2) {
@@ -81,7 +105,7 @@ bool JobShop::schedule()
             if (machineFree && taskNotScheduledYet && jobHasTaskRunning == false) {
                 // Set machine busy for the duration of the task
                 currentMachine.setBusyUntil(time + taskToPlan.getDuration());
-                j.runsUntil(time + taskToPlan.getDuration());
+                j.setRunsUntil(time + taskToPlan.getDuration());
 
                 // Set start time of the job if not already set
                 if (!j.startTimeSet()) {
@@ -110,7 +134,7 @@ bool JobShop::schedule()
         // Update slack of each job
         // 2) Calculate slack for every job
         for (Job& j : jobs) {
-            j.calcSlack(0, longest_job.getRemainingDuration());
+            j.calcSlack(0, longestJob.getRemainingDuration());
         }
         // Sort again by slack
         std::sort(jobs.begin(), jobs.end(), [](Job& job1, Job& job2) {

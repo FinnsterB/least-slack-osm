@@ -13,39 +13,40 @@
 #include "Task.h"
 
 class Job {
+private:
 	unsigned long startTime;
 	unsigned long stopTime;
 	bool isStartTimeSet;
 	unsigned long id;
-	unsigned long runs_until;
-public:
+	unsigned long runsUntil;
 	unsigned long slack;
-	bool hasTaskRunning(unsigned long task);
 	std::vector<Task> tasks;
+public:
+	bool hasTaskRunning(const unsigned long task)const;
+	
 	Job();
-	void addTask(Task task);
-	unsigned long calcSlack(Job* longest_job);
+	Job(const Job& j);
+	void addTask(const Task& task);
+	std::vector<Task>& getTasks();
 
-	unsigned long calcSlack(unsigned long currentTime, unsigned long maxFinishTime);
-	void runsUntil(unsigned long time);
+	unsigned long calcSlack(const unsigned long currentTime, const unsigned long maxFinishTime);
+	void setRunsUntil(const unsigned long time);
 
 	unsigned long getRemainingDuration();
 	unsigned long getDuration();
-	unsigned long getSlack();
+	unsigned long getSlack() const;
 	std::optional<std::reference_wrapper<Task>>  getSchedulableTask();
 	bool isDone();
-	bool startTimeSet();
-	void setStartTime(unsigned long starttime);
-	unsigned long getStartTime();
-	void setStopTime(unsigned long stoptime);
-	unsigned long getStopTime();
+	bool startTimeSet() const;
+	void setStartTime(const unsigned long starttime);
+	unsigned long getStartTime() const;
+	void setStopTime(const unsigned long stoptime);
+	unsigned long getStopTime() const;
 	bool allTasksPlanned();
-	void setId(unsigned long id);
-	unsigned long getId();
+	void setId(const unsigned long id);
+	unsigned long getId() const;
 	virtual ~Job() = default;
-	void updateSlack(unsigned long duration) {
-	    this->slack -= duration;
-	}
+	void updateSlack(const unsigned long duration);
 };
 
 #endif /* JOB_H_ */

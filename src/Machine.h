@@ -13,8 +13,9 @@ private:
 	unsigned long busyUntil = 0;
 public:
 	Machine() = default;
-	unsigned long getBusyUntil();
-	void setBusyUntil(unsigned long time);
+	Machine(const Machine& m);
+	unsigned long getBusyUntil() const;
+	void setBusyUntil(const unsigned long time);
 	virtual ~Machine() = default;
 };
 

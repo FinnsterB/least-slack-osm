@@ -8,6 +8,7 @@
 #ifndef JOBSHOP_H_
 #define JOBSHOP_H_
 #include <vector>
+#include <optional>
 #include "Machine.h"
 #include "Task.h"
 #include "Job.h"
@@ -16,9 +17,14 @@ public:
 	std::vector<Job> jobs;
 	std::vector<Machine> machines;
 
-	void addJob(Job j);
-	Job& getLongestJob();
+	void addJob(const Job& j);
+	/**
+	 * @brief Return std::optional to longest job.
+	 * May return empty if the jobs vector is empty.
+	 */
+	std::optional<Job> getLongestJob();
 	bool everyTaskDone();
+	bool run(const unsigned long amountOfMachines);
 	bool schedule();
 	JobShop() = default;
 	virtual ~JobShop() = default;

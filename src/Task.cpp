@@ -7,11 +7,16 @@
 
 #include "Task.h"
 
-Task::Task(unsigned long machine, unsigned long duration, unsigned long jobNr):machine(machine),duration(duration),scheduled(false),jobNr(jobNr){
+Task::Task(const unsigned long machine, const unsigned long duration, const unsigned long jobNr):
+		machine(machine),duration(duration),scheduled(false),jobNr(jobNr){
 
 }
 
-unsigned long Task::getMachineNr() {
+Task::Task(const Task &t): machine(t.machine), duration(t.duration), scheduled(t.scheduled), jobNr(t.jobNr)
+{
+}
+
+unsigned long Task::getMachineNr() const{
 	return machine;
 }
 
@@ -19,14 +24,14 @@ void Task::setScheduled() {
 	scheduled = true;
 }
 
-unsigned long Task::getDuration() {
+unsigned long Task::getDuration() const{
 	return duration;
 }
 
-bool Task::isScheduled(){
+bool Task::isScheduled() const{
 	return scheduled;
 }
 
-unsigned long Task::getJobNr(){
+unsigned long Task::getJobNr() const{
 	return jobNr;
 }

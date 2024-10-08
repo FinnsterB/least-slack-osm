@@ -7,10 +7,15 @@
 
 #include "Machine.h"
 
-unsigned long Machine::getBusyUntil() {
-	return busyUntil;
+Machine::Machine(const Machine &m) : busyUntil(m.busyUntil)
+{
 }
 
-void Machine::setBusyUntil(unsigned long time) {
+unsigned long Machine::getBusyUntil() const
+{
+    return busyUntil;
+}
+
+void Machine::setBusyUntil(const unsigned long time) {
 	busyUntil = time;
 }
