@@ -12,10 +12,27 @@ class Machine {
 private:
 	unsigned long busyUntil = 0;
 public:
+	/**
+	 * @brief constructs a machine
+	 * @return machine
+	 */
 	Machine() = default;
+	/**
+	 * @brief copyconstructs a machine
+	 * @return machine
+	 */
 	Machine(const Machine& m);
+	/**
+	 * @brief gets the time until a machine is ready for another task
+	 * @return timepoint
+	 */
 	unsigned long getBusyUntil() const;
+	/**
+	 * @brief sets the time until a machine is ready for another task
+	 * @return timepoint
+	 */
 	void setBusyUntil(const unsigned long time);
+	/*destructor */
 	virtual ~Machine() = default;
 };
 

@@ -16,14 +16,27 @@ private:
 	unsigned long jobNr;
 public:
 	Task() = delete;
+	/**
+	 * @brief constructs a task
+	 * @return task
+	 */
 	Task(const unsigned long machine, const unsigned long duration, const unsigned long jobNr);
+	/**
+	 * @brief copyconstructs a task
+	 * @return task
+	 */
 	Task(const Task& t);
 
+	/*getters*/
 	unsigned long getMachineNr() const;
 	unsigned long getDuration() const;
 	bool isScheduled() const;
-	void setScheduled();
 	unsigned long getJobNr() const;
+
+	/*setters*/
+	void setScheduled();
+
+	/*destructor*/
 	virtual ~Task() = default;
 };
 
