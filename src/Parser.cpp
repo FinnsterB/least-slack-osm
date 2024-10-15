@@ -11,13 +11,13 @@
 #include "Parser.h"
 
 std::optional<JobShop> Parser::parse(std::string& filePath) {
+	std::optional<JobShop> jsOpt;
 	JobShop* js = new JobShop();
     std::ifstream file(filePath); // Open the file
     if (!file) { // Check if the file was successfully opened
         std::cerr << "Unable to open file: \"" << filePath << "\"" << std::endl;
 		exit(1);
-        JobShop* empty = new JobShop();
-        return *empty; // Return an error code
+        return *jsOpt; // Return an error code
     }
     std::string line;
     unsigned long lineNr = 0;
@@ -72,8 +72,11 @@ std::optional<JobShop> Parser::parse(std::string& filePath) {
     }
     if(jobnr - 1 != amountJobs) {
     	std::cout << "Syntax ERROR! Amount of jobs specified does not match parsed amount of jobs." << std::endl;
+		return jsOpt;
     }
-    return *js;
+	//Only return js if it is valid.
+	jsOpt.emplace(*js);
+    return jsOpt;
 }
 
 bool Parser::isNumeric(const std::string& str) {
