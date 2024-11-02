@@ -79,7 +79,6 @@ public:
 	void setStartTime(const unsigned long starttime);
 	void setStopTime(const unsigned long stoptime);
 	void setId(const unsigned long id);
-	void updateSlack(const unsigned long duration);
 
 	/** destructor */
 	virtual ~Job() = default;

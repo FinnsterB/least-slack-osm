@@ -44,9 +44,6 @@ bool Job::hasTaskRunning(const unsigned long time) const{
 	}
 	return false;
 }
-void Job::updateSlack(const unsigned long duration) {
-	this->slack -= duration;
-}
 std::optional<std::reference_wrapper<Task>> Job::getSchedulableTask() {
 	std::optional<std::reference_wrapper<Task>> foundTask;
 	for(Task& t : tasks) {
