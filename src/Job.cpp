@@ -11,6 +11,10 @@
 Job::Job() {
 	isStartTimeSet = false;
 	runsUntil = 0;
+	startTime = 0;
+	stopTime = 0;
+	slack = 0;
+	id = 0;
 }
 
 Job::Job(const Job &j) : startTime(j.startTime), stopTime(j.stopTime), isStartTimeSet(j.isStartTimeSet), 
