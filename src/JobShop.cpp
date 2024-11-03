@@ -73,10 +73,16 @@ bool JobShop::schedule()
 		j.calcSlack(0, longestJob.getDuration());
     }
 
-    // 3) Sort jobs on slack
+    // 3) Sort jobs on slack or on id if equal slack
     std::sort(jobs.begin(), jobs.end(), [](Job& job1, Job& job2) {
-        return job1.getSlack() < job2.getSlack();
-    });
+         if(job1.getSlack() < job2.getSlack()) {
+         	return true;
+         }
+         if(job1.getSlack() == job2.getSlack()) {
+         	return job1.getId() < job2.getId();
+         }
+         return false;
+     });
 
     // 4) Plan tasks
     unsigned long time = 0;
@@ -96,7 +102,7 @@ bool JobShop::schedule()
             }
             Task& taskToSchedule = optionalTaskToSchedule.value();
             // Get the machine on which the task should run
-            Machine &currentMachine = machines.at(taskToSchedule.getMachineNr());
+            Machine& currentMachine = machines.at(taskToSchedule.getMachineNr());
 
             // Check if the task can be scheduled
             bool machineFree = currentMachine.getBusyUntil() <= time;
@@ -106,6 +112,7 @@ bool JobShop::schedule()
                 // Set machine busy for the duration of the task
                 currentMachine.setBusyUntil(time + taskToSchedule.getDuration());
                 j.setRunsUntil(time + taskToSchedule.getDuration());
+
 
                 // Set start time of the job if not already set
                 if (!j.startTimeSet()) {
@@ -148,7 +155,9 @@ bool JobShop::schedule()
         });
 
         // Update current time with the new shortest time
-        time += shortestMachineDuration;
+        if(shortestMachineDuration > 0) {
+        	time += shortestMachineDuration;
+        }
 
     }
     return false;
